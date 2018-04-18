@@ -1,0 +1,404 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>windows下搭建solr环境 | linxiaobai&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Kevin Lim">
+    
+    <meta name="description" content="solr是什么
+Solr是一个基于Lucene的Java搜索引擎服务器。Solr 提供了层面搜索、命中醒目显示并且支持多种输出格式（包括 XML/XSLT 和 JSON 格式）。它易于安装和配置，而且附带了一个基于 HTTP 的管理界面。Solr已经在众多大型的网站中使用，较为成熟和稳定。Solr ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="linxiaobai&#39;s blog" title="linxiaobai&#39;s blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="linxiaobai&#39;s blog">linxiaobai&#39;s blog</a></h1>
+				<h2 class="blog-motto">自由の風</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:linxiaobai.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/06/windows下搭建solr环境/" title="windows下搭建solr环境" itemprop="url">windows下搭建solr环境</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://linxiaobai.github.io" title="Kevin Lim">Kevin Lim</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-04-06T01:46:30.000Z" itemprop="datePublished">Apr 6 2015</time>
+    更新日期:<time datetime="2018-04-18T15:38:24.000Z" itemprop="dateModified">Apr 18 2018</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#solr是什么"><span class="toc-number">1.</span> <span class="toc-text">solr是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载solr"><span class="toc-number">2.</span> <span class="toc-text">下载solr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载安装至tomcat"><span class="toc-number">3.</span> <span class="toc-text">下载安装至tomcat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置中文分词器smartcn"><span class="toc-number">4.</span> <span class="toc-text">配置中文分词器smartcn</span></a></li></ol>
+		</div>
+		
+		<h1 id="solr是什么"><a href="#solr是什么" class="headerlink" title="solr是什么"></a>solr是什么</h1><blockquote>
+<p>Solr是一个基于Lucene的Java搜索引擎服务器。Solr 提供了层面搜索、命中醒目显示并且支持多种输出格式（包括 XML/XSLT 和 JSON 格式）。它易于安装和配置，而且附带了一个基于 HTTP 的管理界面。Solr已经在众多大型的网站中使用，较为成熟和稳定。Solr 包装并扩展了 Lucene，所以Solr的基本上沿用了Lucene的相关术语。更重要的是，Solr 创建的索引与 Lucene 搜索引擎库完全兼容。通过对 Solr 进行适当的配置，某些情况下可能需要进行编码，Solr 可以阅读和使用构建到其他 Lucene 应用程序中的索引。此外，很多 Lucene 工具（如Nutch、 Luke）也可以使用 Solr 创建的索引。</p>
+</blockquote>
+<h1 id="下载solr"><a href="#下载solr" class="headerlink" title="下载solr"></a>下载solr</h1><p>下载solr，最新版<a href="http://mirror.bit.edu.cn/apache/lucene/solr/4.10.3" target="_blank" rel="noopener">下载地址</a>，下载之后将其解压，并新建$SOLR_HOME目录为<code>D:\apache-tomcat-solr；</code></p>
+<h1 id="下载安装至tomcat"><a href="#下载安装至tomcat" class="headerlink" title="下载安装至tomcat"></a>下载安装至tomcat</h1><p>我的安装目录为<code>D:\Apache Software Foundation\Tomcat 7.0</code>，有两种部署方法：</p>
+<p>##方法一：<br>步骤1，复制solr-4.10.3\example\webapps下的solr.war到Tomcat 7.0\webapps目录下，<br>步骤2，将solr-4.10.3\example\solr复制到Tomcat 7.0目录下，然后启动tomcat会自动解压部署solr ;<br>步骤3，Tomcat 7.0\webapps\solr目录下修改web.xml文件访问solr目录 ;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;env-entry&gt;</span><br><span class="line">    &lt;env-entry-name&gt;solr/home&lt;/env-entry-name&gt;</span><br><span class="line">    &lt;env-entry-value&gt;D:\Apache Software Foundation\Tomcat 7.0\solr&lt;/env-entry-value&gt;</span><br><span class="line">    &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;</span><br><span class="line">&lt;/env-entry&gt;</span><br></pre></td></tr></table></figure></p>
+<p>##方法二：<br>步骤1，从solr-4.10.3\example\webapps下的solr.war到$SOLR_HOME；<br>步骤2，将solr-4.10.3\example\solr复制到$SOLR_HOME目录；<br>步骤3，在tomcat/conf/catalina/localhost下新建solr.xml，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;Context docBase=&quot;D:\apache-tomcat-solr\solr.war&quot; reloadable=&quot;true&quot; &gt;    </span><br><span class="line">    &lt;Environment name=&quot;solr/home&quot; type=&quot;java.lang.String&quot; value=&quot;D:\apache-tomcat-solr\solr&quot; override=&quot;true&quot; /&gt;    </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure></p>
+<p>完成上述步骤以后，启动tomcat，可能会报如下错误：</p>
+<blockquote>
+<p>一月 28, 2015 10:08:29 上午 org.apache.catalina.core.StandardContext startInternal<br>严重: Error filterStart<br>一月 28, 2015 10:08:29 上午 org.apache.catalina.core.StandardContext startInternal<br>严重: Context [/solr] startup failed due to previous errors<br>一月 28, 2015 10:08:29 上午 org.apache.catalina.startup.HostConfig deployDirectory</p>
+</blockquote>
+<p>这是因为solr-4.10.3.war并没有自带日志打印组件，因此这个步骤不执行，可能引起上述错误或者org.apache.solr.common.SolrException: Could not find necessary SLF4j logging jars.”异常；<br><strong>解决方案：从solr-4.10.3\example\lib\ext复制所有的jar到tomcat/lib下，并复制solr-4.10.3\example\resources\log4j.properties到tomcat/lib下；</strong></p>
+<h1 id="配置中文分词器smartcn"><a href="#配置中文分词器smartcn" class="headerlink" title="配置中文分词器smartcn"></a>配置中文分词器smartcn</h1><p>步骤一，将solr-4.10.3\contrib\analysis-extras\lucene-libs 目录下的lucene-analyzers-smartcn-4.10.3.jar复制到Tomcat 7.0\webapps\solr\WEB-INF\lib目录下；<br>步骤二，修改 $SOLR_HOME\solr\collection1\conf\schema.xml文件添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;field name=&quot;text_zh&quot; type=&quot;text_zh&quot; indexed=&quot;true&quot; stored=&quot;true&quot;/&gt;</span><br><span class="line">&lt;fieldType name=&quot;text_zh&quot; class=&quot;solr.TextField&quot; positionIncrementGap=&quot;100&quot;&gt;</span><br><span class="line">  &lt;analyzer&gt;</span><br><span class="line">    &lt;tokenizer class=&quot;solr.SmartChineseSentenceTokenizerFactory&quot;/&gt;</span><br><span class="line">    &lt;filter class=&quot;solr.SmartChineseWordTokenFilterFactory&quot;/&gt;</span><br><span class="line">    &lt;filter class=&quot;solr.LowerCaseFilterFactory&quot;/&gt;</span><br><span class="line">  &lt;/analyzer&gt;</span><br><span class="line">&lt;/fieldType&gt;</span><br></pre></td></tr></table></figure></p>
+<p>打开<a href="http://localhost/solr" target="_blank" rel="noopener">http://localhost/solr</a> 选择Analysis(分析)，在Analyse Fieldname / FieldType下拉框中可以看到刚才添加到text_zh分词器，在Field Value (Index)输入框输入内容解析结果如下：<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/confluenceWZG_YPA7N{K97T{QF8U8T0C.png" alt="结果"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/solr/">solr</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://linxiaobai.github.io/2015/04/06/windows下搭建solr环境/" data-title="windows下搭建solr环境 | linxiaobai&#39;s blog" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/04/06/linux下mysql定时备份/" title="linux下mysql定时备份">
+  <strong>上一篇:</strong><br/>
+  <span>
+  linux下mysql定时备份</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/17/redis下sentinel实验/"  title="redis下sentinel实验">
+ <strong>下一篇:</strong><br/> 
+ <span>redis下sentinel实验
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'linxiaobai'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#solr是什么"><span class="toc-number">1.</span> <span class="toc-text">solr是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载solr"><span class="toc-number">2.</span> <span class="toc-text">下载solr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载安装至tomcat"><span class="toc-number">3.</span> <span class="toc-text">下载安装至tomcat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置中文分词器smartcn"><span class="toc-number">4.</span> <span class="toc-text">配置中文分词器smartcn</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/java/" title="java">java<sup>5</sup></a></li>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/categories/others/" title="others">others<sup>2</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>7</sup></a></li>
+		
+			<li><a href="/categories/ubuntu/" title="ubuntu">ubuntu<sup>2</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>1</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		
+			<li><a href="/tags/geohash/" title="geohash">geohash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/idea/" title="idea">idea<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>6</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>3</sup></a></li>
+		
+			<li><a href="/tags/lua/" title="lua">lua<sup>1</sup></a></li>
+		
+			<li><a href="/tags/maven/" title="maven">maven<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>7</sup></a></li>
+		
+			<li><a href="/tags/scan/" title="scan">scan<sup>1</sup></a></li>
+		
+			<li><a href="/tags/sentinel/" title="sentinel">sentinel<sup>1</sup></a></li>
+		
+			<li><a href="/tags/solr/" title="solr">solr<sup>1</sup></a></li>
+		
+			<li><a href="/tags/sql/" title="sql">sql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/sublime中文/" title="sublime中文">sublime中文<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>2</sup></a></li>
+		
+			<li><a href="/tags/分布式缓存/" title="分布式缓存">分布式缓存<sup>1</sup></a></li>
+		
+			<li><a href="/tags/分页/" title="分页">分页<sup>1</sup></a></li>
+		
+			<li><a href="/tags/动态规划/" title="动态规划">动态规划<sup>1</sup></a></li>
+		
+			<li><a href="/tags/回溯/" title="回溯">回溯<sup>1</sup></a></li>
+		
+			<li><a href="/tags/在线人数统计/" title="在线人数统计">在线人数统计<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jian Lin.$%#!@# My english is very poor.But I can&#39;t edit Chinese by Sublime,what is the fuck! <br/>
+			I love animation, 最愛セイバー</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2623093963" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/linxiaobai" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2018 
+		
+		<a href="http://linxiaobai.github.io" target="_blank" title="Kevin Lim">Kevin Lim</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
