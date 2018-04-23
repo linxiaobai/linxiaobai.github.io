@@ -128,8 +128,8 @@
 								
 								
 								
-								背景之前将jackson的序列化和反序列化的逻辑写到一个抽象父类中，打算让所有的子类继承父类可以直接用其序列化和反序列化的方法。序列化并不需要指定class类型，所以没问题，但是反序列化需要指定class的类型，所以得在父类里获取到范型T对应的class类型。
-java范型的概念实际上java中范型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校验在编译后会被“擦除”,所以你可以在运行期间跳
+								背景之前将jackson的序列化和反序列化的逻辑写到一个抽象父类中，打算让所有的子类继承父类可以直接用其序列化和反序列化的方法。序列化并不需要指定class类型，所以没问题，但是反序列化需要指定class的类型，所以得在父类里获取到范型T对应的class类型，此时就得考虑如何在运行时动态后获取范型的类型。
+java范型的概念实际上java中范型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校
 								...
 							</p>
 						</section>
@@ -337,6 +337,12 @@ import redis.clie
         
         
         <li>
+          <a href="/2018/04/23/获取bing每日图片/">获取bing每日图片</a>
+        </li>
+        
+        
+        
+        <li>
           <a href="/2018/04/21/动态获取范型的类型/">动态获取范型的类型</a>
         </li>
         
@@ -347,10 +353,6 @@ import redis.clie
         </li>
         
         
-        
-        <li>
-          <a href="/2017/03/26/常用排序算法总结/">常用排序算法总结</a>
-        </li>
         
         
         
@@ -415,7 +417,7 @@ import redis.clie
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>
 	<div class="read-next-card-content-ext">
-		<a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
+		<a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
 	</div>
 </article>
 

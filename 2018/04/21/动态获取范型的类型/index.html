@@ -115,7 +115,7 @@
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p><em>之前将jackson的序列化和反序列化的逻辑写到一个抽象父类中，打算让所有的子类继承父类可以直接用其序列化和反序列化的方法。序列化并不需要指定class类型，所以没问题，但是反序列化需要指定class的类型，所以得在父类里获取到范型T对应的class类型。</em></p>
+                    <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p><em>之前将jackson的序列化和反序列化的逻辑写到一个抽象父类中，打算让所有的子类继承父类可以直接用其序列化和反序列化的方法。序列化并不需要指定class类型，所以没问题，但是反序列化需要指定class的类型，所以得在父类里获取到范型T对应的class类型，此时就得考虑如何在运行时动态后获取范型的类型。</em></p>
 <h1 id="java范型的概念"><a href="#java范型的概念" class="headerlink" title="java范型的概念"></a>java范型的概念</h1><p>实际上java中范型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校验在编译后会被“擦除”,所以你可以在运行期间跳过范型检测（例如反射），我们可以实验证实一下。</p>
 <p>先写个简单使用范型的例子：</p>
 <pre><code class="java">import java.util.List;
@@ -163,8 +163,8 @@ public class TT {
     }
 }
 </code></pre>
-<p>既然运行期间都不含范型的类型了，我们还能动态获取到范型的类型吗？</p>
-<p>答案是可以的～ 在JDK1.5后对class信息作了调整，将范型的信息也加入了class信息中，我们可以通过反射来获取这些信息。</p>
+<p>既然运行期间都不起作用了，我们还能动态获取到范型的类型吗？</p>
+<p>答案是可以的。 在JDK1.5后对class信息也作了相应调整，将范型的信息加入了class信息中，且可以通过反射来获取这些信息。</p>
 <h1 id="动态获取范型Class类型"><a href="#动态获取范型Class类型" class="headerlink" title="动态获取范型Class类型"></a>动态获取范型Class类型</h1><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><ol>
 <li>先编写一个抽象父类，里面定义了一个逻辑就是将范型T的类型赋值给成员变量type，然后子类可以通过getType()方法来获取type值。</li>
 </ol>
@@ -235,10 +235,57 @@ public class Main {
     }
 }
 </code></pre>
-<p>可以看到结果是OK的，所以我要在<em>AbstractType</em>类里实现反序列化的需求可以实现的。</p>
-<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p><strong>核心代码<code>Type superclass = getClass().getGenericSuperclass();</code></strong></p>
-<p><em>getClass()</em>方法我们不陌生，就是获取当前类，在上面例子中也就是对于的<em>IntegerType.class</em>等。</p>
-<p>主要看<em>getGenericSuperclass()</em>方法。</p>
+<p>可以看到结果是OK的，所以我要在<em>AbstractType</em>类里实现反序列化的需求可以实现。</p>
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>#### </p>
+<p>前面提到了class类信息里有包含范型类信息，用<code>javap -p -v StringType</code>反编译.class文件可以证实这点：</p>
+<pre><code class="java">Classfile /Users/jianlin/dev/workspaces/selfworkspaces/codingTest/target/classes/blog/StringType.class
+  Last modified 2018-4-21; size 332 bytes
+  MD5 checksum 31016206efd492583f5e1d7fd2646d7c
+  Compiled from &quot;StringType.java&quot;
+public class blog.StringType extends blog.AbstractType&lt;java.lang.String&gt;
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #3.#15         // blog/AbstractType.&quot;&lt;init&gt;&quot;:()V
+   #2 = Class              #16            // blog/StringType
+   #3 = Class              #17            // blog/AbstractType
+   #4 = Utf8               &lt;init&gt;
+   #5 = Utf8               ()V
+   #6 = Utf8               Code
+   #7 = Utf8               LineNumberTable
+   #8 = Utf8               LocalVariableTable
+   #9 = Utf8               this
+  #10 = Utf8               Lblog/StringType;
+  #11 = Utf8               Signature
+  #12 = Utf8               Lblog/AbstractType&lt;Ljava/lang/String;&gt;;
+  #13 = Utf8               SourceFile
+  #14 = Utf8               StringType.java
+  #15 = NameAndType        #4:#5          // &quot;&lt;init&gt;&quot;:()V
+  #16 = Utf8               blog/StringType
+  #17 = Utf8               blog/AbstractType
+{
+  blog.StringType();
+    descriptor: ()V
+    flags:
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method blog/AbstractType.&quot;&lt;init&gt;&quot;:()V
+         4: return
+      LineNumberTable:
+        line 9: 0
+        line 10: 4
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lblog/StringType;
+}
+Signature: #12                          // Lblog/AbstractType&lt;Ljava/lang/String;&gt;;
+SourceFile: &quot;StringType.java&quot;
+</code></pre>
+<p>然后我们可以通过反射获取对应的类型信息，下面看看获取的方法。</p>
+<p><strong><em>核心代码<code>Type superclass = getClass().getGenericSuperclass();</code></em></strong></p>
+<p><em>getClass()</em>方法我们不陌生，就是获取当前类，在前面的例子中就是对应的<em>IntegerType.class</em>等。这里主要看<em>getGenericSuperclass()</em>方法。</p>
 <pre><code class="java"> /**
      * Returns the {@code Type} representing the direct superclass of
      * the entity (class, interface, primitive type or void) represented by
@@ -306,12 +353,12 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
 </code></pre>
 </li>
 </ul>
-<h3 id="获取T类型"><a href="#获取T类型" class="headerlink" title="获取T类型"></a>获取T类型</h3><p>最后范型T到底怎么取呢，细心的同学可能已经发现了，上面的示例图中actualTypeArguments带的数组中第一个类型就是Integer的class对象，那么为啥还要用guava的TypeToken.of处理一下，而不是直接type = (Class<t>) runtimeType。原因是因为实例中还有AbstractType&lt;List<integer>&gt;这种情况，对应的T实际上并非Class类型，而是ParameterizedTypeImpl类型，所以还需要特殊处理获得List类信息，这些可以交给TypeToken.of帮我们做，实现原理是进行了一些类型判断，针对这种ParameterizedTypeImpl类型的直接取rawType。 </integer></t></p>
+<p>###获取T类型</p>
+<p>最后范型T到底怎么取呢，细心的同学可能已经发现了，上面的示例图中actualTypeArguments带的数组中第一个类型就是Integer的class对象，那么为啥还要用guava的TypeToken.of处理一下，而不是直接type = (Class<t>) runtimeType。原因是因为实例中还有AbstractType&lt;List<integer>&gt;这种情况，对应的T实际上并非Class类型，而是ParameterizedTypeImpl类型，所以还需要特殊处理获得List类信息，这些可以交给TypeToken.of帮我们做，TypeToken.of实际上是进行了一些类型判断，会针对这种ParameterizedTypeImpl类型的直接取rawType。 </integer></t></p>
 <h3 id="其他方式"><a href="#其他方式" class="headerlink" title="其他方式"></a>其他方式</h3><p>实际上Spring也提供了一个动态获取范型T的Class类型的方法，当然底层还是基于上面提到的getGenericSuperclass()方法实现的，不再做详细描述。</p>
-<p><code>type = (Class&lt;T&gt;) GenericTypeResolver.resolveTypeArgument(this.getClass(), AbstractType.class);</code></p>
+<p><code>Class&lt;&gt;type = (Class&lt;T&gt;) GenericTypeResolver.resolveTypeArgument(this.getClass(), AbstractType.class);//spring实现</code></p>
 <p>参考:</p>
 <p><a href="http://rednaxelafx.iteye.com/blog/586212" target="_blank" rel="noopener">http://rednaxelafx.iteye.com/blog/586212</a></p>
-<p><a href="https://docs.oracle.com/javase/tutorial/extra/generics/index.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/tutorial/extra/generics/index.html</a></p>
 
                 </div>
             </section>
@@ -320,6 +367,10 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
     
 <nav class="pagination">
     
+    
+    <a class="prev-post" href="/2018/04/23/获取bing每日图片/">
+        ← 获取bing每日图片
+    </a>
     
     <span class="prev-next-post">•</span>
     
@@ -347,7 +398,7 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
 <div class="toc-main" style="right: -100%">
     <div class="post-toc">
         <span>TOC</span>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java范型的概念"><span class="toc-text">java范型的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态获取范型Class类型"><span class="toc-text">动态获取范型Class类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理分析"><span class="toc-text">原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-Type"><span class="toc-text">关于 Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-getGenericSuperclass-方法"><span class="toc-text">关于 getGenericSuperclass() 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取T类型"><span class="toc-text">获取T类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他方式"><span class="toc-text">其他方式</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java范型的概念"><span class="toc-text">java范型的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态获取范型Class类型"><span class="toc-text">动态获取范型Class类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理分析"><span class="toc-text">原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-Type"><span class="toc-text">关于 Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-getGenericSuperclass-方法"><span class="toc-text">关于 getGenericSuperclass() 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他方式"><span class="toc-text">其他方式</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
 
@@ -377,6 +428,12 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
         
         
         <li>
+          <a href="/2018/04/23/获取bing每日图片/">获取bing每日图片</a>
+        </li>
+        
+        
+        
+        <li>
           <a href="/2018/04/21/动态获取范型的类型/">动态获取范型的类型</a>
         </li>
         
@@ -387,10 +444,6 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
         </li>
         
         
-        
-        <li>
-          <a href="/2017/03/26/常用排序算法总结/">常用排序算法总结</a>
-        </li>
         
         
         
@@ -455,7 +508,7 @@ System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.O
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>
 	<div class="read-next-card-content-ext">
-		<a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
+		<a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
 	</div>
 </article>
 

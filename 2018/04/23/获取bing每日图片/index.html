@@ -16,7 +16,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>Maven构建多环境发布 | linxiaobai's blog</title>
+	<title>获取bing每日图片 | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -99,71 +99,86 @@
     <div class="inner">
         <header class="post-full-header">
             <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2015-04-06T03:06:21.000Z" itemprop="datePublished">
-                    2015-04-6
+                <time  class="post-full-meta-date" datetime="2018-04-23T15:33:43.000Z" itemprop="datePublished">
+                    2018-04-23
                 </time>
                 
                 <span class="date-divider">/</span>
                 
-                <a href="/categories/others/">others</a>&nbsp;&nbsp;
-                
                 
             </section>
-            <h1 class="post-full-title">Maven构建多环境发布</h1>
+            <h1 class="post-full-title">获取bing每日图片</h1>
         </header>
-        <article class="post-full no-image">
+        <article class="post-full ">
+            
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/HNPVisitors_ZH-CN13484945239_1920x1080.jpg)">
+            </figure>
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <p>web项目在不同运行环境下如本地测试、线上测试、生产环境多个环境的资源配置文件各不相同，以项目为例，资源文件结构如下图：</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/mavenmaven.png" alt="结构图"></p>
-<hr>
-<p>在maven构建之前，每次部署完成之后都需要手动修改配置文件，这样极为不便，下面介绍通过maven构建多环境下的打包方法。</p>
-<p>1.首先资源文件配置如上图所示，划分不同环境的资源文件目录。<br>2.增加web模块的pom文件配置：</p>
-<pre><code>&lt;profiles&gt;
-    &lt;profile&gt;
-        &lt;id&gt;local&lt;/id&gt;
-        &lt;properties&gt;
-            &lt;deploy.type&gt;local&lt;/deploy.type&gt;
-        &lt;/properties&gt;
-    &lt;/profile&gt;
-    &lt;profile&gt;
-        &lt;id&gt;prod&lt;/id&gt;
-        &lt;properties&gt;
-            &lt;deploy.type&gt;prod&lt;/deploy.type&gt;
-        &lt;/properties&gt;
-    &lt;/profile&gt;
-    &lt;profile&gt;
-        &lt;id&gt;dev&lt;/id&gt;
-        &lt;properties&gt;
-            &lt;deploy.type&gt;dev&lt;/deploy.type&gt;
-        &lt;/properties&gt;
-        &lt;activation&gt;
-            &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
-        &lt;/activation&gt;
-    &lt;/profile&gt;
-&lt;/profiles&gt;
-</code></pre><p><strong>本例中，pom配置分别为本地环境（local）、开发环境（dev）、生产环境（prod），其中默认激活环境为dev。</strong></p>
-<p>3.为项目编译添加资源过滤：</p>
-<pre><code>&lt;build&gt;
-    &lt;resources&gt;
-        &lt;resource&gt;
-            &lt;directory&gt;${project.basedir}/src/main/resources&lt;/directory&gt;
-            &lt;!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 --&gt;
-            &lt;excludes&gt;
-                &lt;exclude&gt;local/*&lt;/exclude&gt;
-                &lt;exclude&gt;dev/*&lt;/exclude&gt;
-                &lt;exclude&gt;prod/*&lt;/exclude&gt;
-            &lt;/excludes&gt;
-        &lt;/resource&gt;
-        &lt;resource&gt;
-            &lt;directory&gt;${project.basedir}/src/main/resources.${deploy.type}&lt;/directory&gt;
-        &lt;/resource&gt;
-    &lt;/resources&gt;
-&lt;/build&gt;
-</code></pre><hr>
-<p>在Intelij IDEA中编译项目时，首先选择你要构建的profile，如下：<img src="http://7u2mp7.com1.z0.glb.clouddn.com/maven2.png" alt="profile"></p>
-<p>然后再运行编译，即可实现不同环境下的构建发布（或使用mvn指令mvn install -Pdev发布）。</p>
+                    <blockquote>
+<p>因为选用的blog实际上是支持文章带封面图的，例如本篇博文这样。只需要提供图片地址即可，开始想着自己找些跟文章相关的图片上传到七牛云（本博客网站用的图床），然后在将链接加入blog中，但是感觉过于繁琐，且七牛云免费的空间容量有限。所以想到了直接用bing的图片，因为我本身就非常喜欢bing每天更新的图片。</p>
+</blockquote>
+<h1 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h1><ol>
+<li>找到bing图片api地址</li>
+<li>编写脚本请求api地址，解析出图片地址，保存到文本文件中</li>
+<li>crontab设置一个合适的时间点，定时请求脚本</li>
+<li>下次编写blog时，直接<code>tail -1 文本文件</code>取最后一条图片地址作为博客封面图</li>
+</ol>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>1.找api地址</p>
+<p>直接google一搜，发现有人在stackoverflow上问过，<a href="https://stackoverflow.com/questions/10639914/is-there-a-way-to-get-bings-photo-of-the-day" target="_blank" rel="noopener">https://stackoverflow.com/questions/10639914/is-there-a-way-to-get-bings-photo-of-the-day</a></p>
+<p>因为json解析起来方便点，所以选用返回格式为json的api地址：<a href="https://www.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1&amp;mkt=en-US" target="_blank" rel="noopener">https://www.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1&amp;mkt=en-US</a> </p>
+<p>2.编写python脚本<em>get_bing_pic_url.py</em></p>
+<p>没啥好多说的，按 请求，解析，保存三步走即可,用到了requests类库，没有的需要装下，安装方法见注释</p>
+<pre><code class="python">#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+#############################################
+#########   sudo easy_install pip   #########
+######### sudo pip install requests #########
+#############################################
+
+import requests
+import json
+
+file = &quot;/Users/jianlin/dev/coding/python/crawler/bingPics.txt&quot;
+url = &quot;https://www.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1&amp;mkt=en-US&quot;
+domain = &quot;https://cn.bing.com&quot;
+
+
+def get_data():
+    r = requests.get(url, timeout=5)
+    return r.content
+
+def parse_data(content):
+    json_data = json.loads(content)
+    return json_data[&#39;images&#39;][0][&#39;url&#39;]
+
+def save_url(pic_url):
+    try:
+        f = open(file, &quot;a&quot;)
+        f.writelines(pic_url)
+        f.write(&quot;\n&quot;)
+    finally:
+        if f:
+            f.close
+
+
+if __name__ == &#39;__main__&#39;:
+    d = get_data()
+    u = domain + parse_data(d)
+    print u
+    save_url(u)
+</code></pre>
+<p>运行后，url会追加到bingPics.txt文件中，之所以用追加，因为我想保存所有的图片，到时候写blog时封面图选择面广。<strong>注意file路径需要改成你自己的</strong>。</p>
+<p>3.crontab配置，注意路径要写全</p>
+<p><code>00 11 * * * python /Users/jianlin/dev/coding/python/crawler/get_bing_pic_url.py</code></p>
+<p>最好将python脚本可执行权限加上</p>
+<p><code>chmod +x /Users/jianlin/dev/coding/python/crawler/get_bing_pic_url.py</code></p>
+<p>4.查看图片url, <code>tail -1</code></p>
+<pre><code>➜  crawler tail -1 bingPics.txt
+https://cn.bing.com/az/hprichbg/rb/HNPVisitors_ZH-CN13484945239_1920x1080.jpg
+</code></pre><p>ok，放到blog中，大功告成～</p>
 
                 </div>
             </section>
@@ -173,14 +188,10 @@
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2015/04/06/使用redis缓存实现分页/">
-        ← 如何使用redis缓存实现分页
-    </a>
-    
     <span class="prev-next-post">•</span>
     
-    <a class="next-post" href="/2015/04/06/IDEA快捷键/">
-        IDEA快捷键 →
+    <a class="next-post" href="/2018/04/21/动态获取范型的类型/">
+        动态获取范型的类型 →
     </a>
     
     
@@ -203,7 +214,7 @@
 <div class="toc-main" style="right: -100%">
     <div class="post-toc">
         <span>TOC</span>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#设计思路"><span class="toc-text">设计思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践"><span class="toc-text">实践</span></a></li></ol>
     </div>
 </div>
 
