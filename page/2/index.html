@@ -105,6 +105,42 @@
 			<article class="post-card post  no-image ">
 				
 				<div class="post-card-content">
+					<a class="post-card-content-link" href="/2015/04/06/使用redis实现在线人数统计/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								redis
+								| 
+								
+								<time datetime="2015-04-06T04:57:36.000Z" itemprop="datePublished">
+									4月 6 2015
+								</time>
+							</span>
+							<h2 class="post-card-title">使用redis实现在线人数统计</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								实现方案用户登录的时候往redis里面存储一个值（对应的在线人数增1），这个值的key值是和这个用户的唯一识别码（例如userId或者username）有联系，在存储的同时，设置其对应的生命周期，比如30分钟，当用户在网站上点击相关操作时（可以结合AOP去实现），重新刷新这个值为30分钟，如果用户什么都不干，30分钟后，redis里面存储的值消失了（对应的在线人数减1），另外用户注销时，直接删除这个用户对应的数据。而我们在获取在线人数的时候不需要对其进行加减操作，我们只需统计
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						
+						<span class="post-card-author">Kevin Lim</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
 					<a class="post-card-content-link" href="/2015/04/06/使用redis缓存实现分页/">
 						<header class="post-card-header">
 							<span class="post-card-tags">
@@ -509,6 +545,12 @@ import redis.clie
         
         
         <li>
+          <a href="/2018/04/27/java注解概念及运用/">java注解概念及运用</a>
+        </li>
+        
+        
+        
+        <li>
           <a href="/2018/04/23/获取bing每日图片/">获取bing每日图片</a>
         </li>
         
@@ -519,10 +561,6 @@ import redis.clie
         </li>
         
         
-        
-        <li>
-          <a href="/2017/05/07/数据库基本概念/">数据库基本概念</a>
-        </li>
         
         
         
