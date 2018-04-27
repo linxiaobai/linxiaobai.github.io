@@ -168,56 +168,47 @@ public @interface Job {
 </code></pre>
 </li>
 <li><p>定义2个任务的实现以及任务的执行</p>
-<pre><code class="java"> public interface Task {
-    void execute();
-    boolean isRunning();
- }
-
-</code></pre>
-<pre><code class="java"> /**
- * Created by jianlin on 04/27/2018.
- */
- @Target(ElementType.TYPE)
- @Retention(RetentionPolicy.RUNTIME)
- @Inherited
- public @interface Job {
-    /**
-     * 定时任务名称
-     */
-    String name() default &quot;&quot;;
-    /**
-     * 定时任务间隔时间
-     */
-    int interval() default 1;
- }
-
-</code></pre>
-<pre><code class="java"> /**
- * Created by jianlin on 04/27/2018.
- */
- @Component
- @Job(name = &quot;printTask&quot;, interval = 10)
- public class PrintTask implements Task {
-    private volatile boolean isRunning = false;
-
-    @Override
-    public void execute() {
-        System.out.println(&quot;current date time is:&quot; + LocalDateTime.now());
-        isRunning = true;
-    }
-
-    @Override
-    public boolean isRunning() {
-        return isRunning;
-    }
- }
-</code></pre>
 </li>
 </ol>
-<pre><code>```java
-/**
-* Created by jianlin on 04/27/2018.
-*/
+<pre><code class="java">public interface Task {
+   void execute();
+   boolean isRunning();
+}
+
+</code></pre>
+<pre><code class="java">@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Job {
+   /**
+    * 定时任务名称
+    */
+   String name() default &quot;&quot;;
+   /**
+    * 定时任务间隔时间
+    */
+   int interval() default 1;
+}
+
+</code></pre>
+<pre><code class="java">@Component
+@Job(name = &quot;printTask&quot;, interval = 10)
+public class PrintTask implements Task {
+   private volatile boolean isRunning = false;
+
+   @Override
+   public void execute() {
+       System.out.println(&quot;current date time is:&quot; + LocalDateTime.now());
+       isRunning = true;
+   }
+
+   @Override
+   public boolean isRunning() {
+       return isRunning;
+   }
+}
+
+
 @Component
 @Job(name = &quot;calculateTask&quot;, interval = 5)
 public class CalculateTask implements Task {
@@ -234,12 +225,7 @@ public class CalculateTask implements Task {
        return isRunning;
    }
 }
-```
 
-```java
-/**
-* Created by jianlin on 04/27/2018.
-*/
 @Component
 public class TaskMap {
    private final Executor threadPool = Executors.newFixedThreadPool(10);
@@ -268,8 +254,8 @@ public class TaskMap {
        return false;
    }
 }
-```
-</code></pre><ol start="3">
+</code></pre>
+<ol start="3">
 <li><p>遍历Spring容器中的所有类，将@Job注解标示的类加入TaskMap里。</p>
 <pre><code class="java">/**
  * Created by jianlin on 04/27/2018.
