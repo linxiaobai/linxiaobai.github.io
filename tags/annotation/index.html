@@ -18,7 +18,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>Category: redis | linxiaobai's blog</title>
+	<title>Tag: annotation | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -89,10 +89,10 @@
         <div class="site-header-content">
             <h1 class="site-title">
                 
-                Category: redis
+                Tag: annotation
                 
             </h1>
-            <h2 class="site-description">分类</h2>
+            <h2 class="site-description">标签</h2>
         </div>
         
         
@@ -104,22 +104,24 @@
 	<div class="inner">
 		<div class="post-feed">
 			
-			<article class="post-card post  no-image ">
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" href="/2018/04/27/java注解概念及运用/">
+					<div class="post-card-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/SatelliteGlades_ZH-CN11389308210_1920x1080.jpg)"></div>
+				</a>
 				
 				<div class="post-card-content">
-					<a class="post-card-content-link" href="/2015/04/06/使用redis实现在线人数统计/">
+					<a class="post-card-content-link" href="/2018/04/27/java注解概念及运用/">
 						<header class="post-card-header">
 							<span class="post-card-tags">
 								
-								
-								redis
 								| 
 								
-								<time datetime="2015-04-06T04:57:36.000Z" itemprop="datePublished">
-									4月 6 2015
+								<time datetime="2018-04-27T15:22:56.000Z" itemprop="datePublished">
+									4月 27 2018
 								</time>
 							</span>
-							<h2 class="post-card-title">使用redis实现在线人数统计</h2>
+							<h2 class="post-card-title">java注解概念及运用</h2>
 						</header>
 						<section class="post-card-excerpt">
 							<p>
@@ -127,128 +129,10 @@
 								
 								
 								
-								
-								实现方案用户登录的时候往redis里面存储一个值（对应的在线人数增1），这个值的key值是和这个用户的唯一识别码（例如userId或者username）有联系，在存储的同时，设置其对应的生命周期，比如30分钟，当用户在网站上点击相关操作时（可以结合AOP去实现），重新刷新这个值为30分钟，如果用户什么都不干，30分钟后，redis里面存储的值消失了（对应的在线人数减1），另外用户注销时，直接删除这个用户对应的数据。而我们在获取在线人数的时候不需要对其进行加减操作，我们只需统计
-								...
-							</p>
-						</section>
-					</a>
-					<footer class="post-card-meta">
-						
-						<span class="post-card-author">Kevin Lim</span>
-					</footer>
-				</div>
-			</article>
-			
-			<article class="post-card post  no-image ">
-				
-				<div class="post-card-content">
-					<a class="post-card-content-link" href="/2015/04/06/使用redis缓存实现分页/">
-						<header class="post-card-header">
-							<span class="post-card-tags">
-								
-								
-								redis
-								| 
-								
-								<time datetime="2015-04-06T03:14:00.000Z" itemprop="datePublished">
-									4月 6 2015
-								</time>
-							</span>
-							<h2 class="post-card-title">如何使用redis缓存实现分页</h2>
-						</header>
-						<section class="post-card-excerpt">
-							<p>
-								
-								
-								
-								
-								
-								说明:内容摘自公司内部confluence,部分是自己写的,部分是同事写的,记录下来供以后参考学习.
+注解是一种描述数据的数据。Annotations仅仅是元数据，和业务逻辑无关。
 
-解决思路用hset和hget进行每个对象的存取，用zadd和zrange存取条件索引（可以通过控制后面offset值进行分页查询），然后根据zrange获取到的key值再去用hget循环遍历获取对象add到返回的集合当中。
-
-简单实验但是为了实现根据条件查询，需要在存取对象前对某个条件做索引，下面举个例子。
-现在有4个用户，分别是： zhangsan,lisi,wangwu
-								...
-							</p>
-						</section>
-					</a>
-					<footer class="post-card-meta">
-						
-						<span class="post-card-author">Kevin Lim</span>
-					</footer>
-				</div>
-			</article>
-			
-			<article class="post-card post  no-image ">
-				
-				<div class="post-card-content">
-					<a class="post-card-content-link" href="/2015/03/17/redis下sentinel实验/">
-						<header class="post-card-header">
-							<span class="post-card-tags">
-								
-								
-								redis
-								| 
-								
-								<time datetime="2015-03-17T07:43:47.000Z" itemprop="datePublished">
-									3月 17 2015
-								</time>
-							</span>
-							<h2 class="post-card-title">redis下sentinel实验</h2>
-						</header>
-						<section class="post-card-excerpt">
-							<p>
-								
-								
-								
-								
-								
-								
-很早以前在2台阿里云服务器上把redis主备给搭好了,但是一直纠结的是阿里云好像不支持vip,没办法做主从切换,万一主服务器崩了就完蛋咯.先不考虑服务器端环境,学习一下redis自身关于HA(hign available)的实现–sentinel.下面开始做实验看看它的实际效果.
-
-
-一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)1.用mkdir testRedis指令建一个测试目录
-2.将redis-2.8.19拷贝到
-								...
-							</p>
-						</section>
-					</a>
-					<footer class="post-card-meta">
-						
-						<span class="post-card-author">Kevin Lim</span>
-					</footer>
-				</div>
-			</article>
-			
-			<article class="post-card post  no-image ">
-				
-				<div class="post-card-content">
-					<a class="post-card-content-link" href="/2015/01/31/redis用scan进行数据的迭代遍历/">
-						<header class="post-card-header">
-							<span class="post-card-tags">
-								
-								
-								redis
-								| 
-								
-								<time datetime="2015-01-31T01:12:33.000Z" itemprop="datePublished">
-									1月 31 2015
-								</time>
-							</span>
-							<h2 class="post-card-title">redis用scan进行数据的迭代遍历</h2>
-						</header>
-						<section class="post-card-excerpt">
-							<p>
-								
-								
-								
-								
-								
-								在redis中是支持使用通配符的使用，例如‘？’或是‘’所以我们在获取redis里面的某个db里面的所有数据可以用 `keys `这样的指令来实现。但是存在一个问题就是这样做的话，在数据量很大的情况下效率是很不理想的。redis的作者在一篇博文中也提到这一点。
-
-Your collection is very small? Fine, use SMEMBERS and you get Redis-alike performances anyway. Your collecti
+元注解@Documented注解是否将包含在JavaDoc中
+@Retention 什么时候使用注解，注解的生命周期
 								...
 							</p>
 						</section>
