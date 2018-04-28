@@ -184,7 +184,7 @@
 			<article class="post-card post  no-image ">
 				
 				<div class="post-card-content">
-					<a class="post-card-content-link" href="/2018/04/21/动态获取范型的类型/">
+					<a class="post-card-content-link" href="/2018/04/21/动态获取泛型的类型/">
 						<header class="post-card-header">
 							<span class="post-card-tags">
 								
@@ -196,7 +196,7 @@
 									4月 21 2018
 								</time>
 							</span>
-							<h2 class="post-card-title">动态获取范型的类型</h2>
+							<h2 class="post-card-title">动态获取泛型的类型</h2>
 						</header>
 						<section class="post-card-excerpt">
 							<p>
@@ -205,8 +205,13 @@
 								
 								
 								
-								背景之前将jackson的序列化和反序列化的逻辑写到一个抽象父类中，打算让所有的子类继承父类可以直接用其序列化和反序列化的方法。序列化并不需要指定class类型，所以没问题，但是反序列化需要指定class的类型，所以得在父类里获取到范型T对应的class类型，此时就得考虑如何在运行时动态后获取范型的类型。
-java范型的概念实际上java中范型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校
+								java泛型的概念实际上java中泛型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校验在编译后会被“擦除”,所以你可以在运行期间跳过泛型检测（例如反射），我们可以实验证实一下。
+先写个简单使用泛型的例子：
+import java.util.List;
+import java.util.ArrayList;
+
+public class TestGeneric {
+        public
 								...
 							</p>
 						</section>
@@ -265,7 +270,7 @@ java范型的概念实际上java中范型的实现只是一个语法糖，在编
         
         
         <li>
-          <a href="/2018/04/21/动态获取范型的类型/">动态获取范型的类型</a>
+          <a href="/2018/04/21/动态获取泛型的类型/">动态获取泛型的类型</a>
         </li>
         
         

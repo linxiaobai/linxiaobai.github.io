@@ -16,7 +16,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>JVM再探-垃圾收集器和内存分配策略 | linxiaobai's blog</title>
+	<title>动态获取泛型的类型 | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -99,8 +99,8 @@
     <div class="inner">
         <header class="post-full-header">
             <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2016-03-20T03:15:38.000Z" itemprop="datePublished">
-                    2016-03-20
+                <time  class="post-full-meta-date" datetime="2018-04-21T11:04:09.000Z" itemprop="datePublished">
+                    2018-04-21
                 </time>
                 
                 <span class="date-divider">/</span>
@@ -109,42 +109,255 @@
                 
                 
             </section>
-            <h1 class="post-full-title">JVM再探-垃圾收集器和内存分配策略</h1>
+            <h1 class="post-full-title">动态获取泛型的类型</h1>
         </header>
         <article class="post-full no-image">
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <blockquote>
-<p>java程序内存的分配和释放都是由JVM进行管理的,新建一个对象等分配了一定的内存后,当对象不再被引用时,就需要释放对应的内存,这些都统一归JVM管理,对于JVM的内存释放我们称之为垃圾回收.</p>
-</blockquote>
-<h2 id="垃圾收集器算法"><a href="#垃圾收集器算法" class="headerlink" title="垃圾收集器算法"></a>垃圾收集器算法</h2><p>JVM垃圾收集算法简单分为3类,标记-清除算法,复制算法以及标记-整理算法.</p>
+                    <h1 id="java泛型的概念"><a href="#java泛型的概念" class="headerlink" title="java泛型的概念"></a>java泛型的概念</h1><p>实际上java中泛型的实现只是一个语法糖，在编译的时候会起作用，帮我们做一些校验，比如String类型的List是否添加了Integer类型的对象。而该校验在编译后会被“擦除”,所以你可以在运行期间跳过泛型检测（例如反射），我们可以实验证实一下。</p>
+<p>先写个简单使用泛型的例子：</p>
+<pre><code class="java">import java.util.List;
+import java.util.ArrayList;
+
+public class TestGeneric {
+        public static void main(String[] args) {
+                List&lt;String&gt; list = new ArrayList&lt;&gt;();
+                list.add(&quot;hello&quot;);
+        }
+}
+</code></pre>
+<p>然后编译一下，将编译后的class反编译后发现并没有表示集合的类型:</p>
+<pre><code class="java">import java.util.ArrayList;
+import java.util.List;
+public class TestGeneric
+{
+  public static void main(String[] paramArrayOfString)
+  {
+    ArrayList localArrayList = new ArrayList();
+    localArrayList.add(&quot;hello&quot;);
+  }
+}
+</code></pre>
+<p>通过反射来将一个int类型值添加到List<string>集合中：</string></p>
+<pre><code class="java">import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by jianlin on 04/19/2018.
+ */
+public class TT {
+
+    public static void main(String[] args) {
+        List&lt;String&gt; list = new ArrayList&lt;&gt;();
+        list.add(&quot;hello&quot;);
+        try {
+            Method method = List.class.getMethod(&quot;add&quot;, Object.class);
+            method.invoke(list, 1);
+            System.out.println(list);//[hello, 1]
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>既然运行期间都不起作用了，我们还能动态获取到泛型的类型吗？</p>
+<p>答案是可以的。 在JDK1.5后对class信息也作了相应调整，将泛型的信息加入了class信息中，且可以通过反射来获取这些信息。</p>
+<h1 id="动态获取泛型Class类型"><a href="#动态获取泛型Class类型" class="headerlink" title="动态获取泛型Class类型"></a>动态获取泛型Class类型</h1><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><ol>
+<li>先编写一个抽象父类，里面定义了一个逻辑就是将泛型T的类型赋值给成员变量type，然后子类可以通过getType()方法来获取type值。</li>
+</ol>
+<pre><code class="java">import static com.google.common.base.Preconditions.checkArgument;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+/**
+ * Created by jianlin on 04/18/2018.
+ */
+public abstract class AbstractType&lt;T&gt; {
+
+
+    private final Class&lt;T&gt; type;
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected AbstractType() {
+        Type superclass = getClass().getGenericSuperclass();
+        checkArgument(superclass instanceof ParameterizedType,
+            &quot;%s isn&#39;t parameterized&quot;, superclass);
+        Type runtimeType = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+        type = (Class&lt;T&gt;) TypeToken.of(runtimeType).getRawType();
+    }
+
+    protected Class&lt;T&gt; getType() {
+        return type;
+}
+</code></pre>
+<ol start="2">
+<li>编写几个子类实现，指定T为不同的类型，看看是否能打印出对应的类名。</li>
+</ol>
+<pre><code class="java">public class IntegerType extends AbstractType&lt;Integer&gt; {
+
+    IntegerType() {
+        super();
+    }
+}
+
+
+public class StringType extends AbstractType&lt;String&gt; {
+
+    StringType() {
+        super();
+    }
+}
+
+public class ListType extends AbstractType&lt;List&lt;Integer&gt;&gt; {
+
+    ListType() {
+        super();
+    }
+
+}
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        IntegerType integerType = new IntegerType();
+        System.out.println(integerType.getType());//class java.lang.Integer
+
+        StringType stringType = new StringType();
+        System.out.println(stringType.getType());//class java.lang.String
+
+        ListType listType = new ListType();
+        System.out.println(listType.getType());//interface java.util.List
+    }
+}
+</code></pre>
+<p>可以看到结果是OK的，所以我要在<em>AbstractType</em>类里实现反序列化的需求可以实现。</p>
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>#### </p>
+<p>前面提到了class类信息里有包含泛型类信息，用<code>javap -p -v StringType</code>反编译.class文件可以证实这点：</p>
+<pre><code class="java">Classfile /Users/jianlin/dev/workspaces/selfworkspaces/codingTest/target/classes/blog/StringType.class
+  Last modified 2018-4-21; size 332 bytes
+  MD5 checksum 31016206efd492583f5e1d7fd2646d7c
+  Compiled from &quot;StringType.java&quot;
+public class blog.StringType extends blog.AbstractType&lt;java.lang.String&gt;
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #3.#15         // blog/AbstractType.&quot;&lt;init&gt;&quot;:()V
+   #2 = Class              #16            // blog/StringType
+   #3 = Class              #17            // blog/AbstractType
+   #4 = Utf8               &lt;init&gt;
+   #5 = Utf8               ()V
+   #6 = Utf8               Code
+   #7 = Utf8               LineNumberTable
+   #8 = Utf8               LocalVariableTable
+   #9 = Utf8               this
+  #10 = Utf8               Lblog/StringType;
+  #11 = Utf8               Signature
+  #12 = Utf8               Lblog/AbstractType&lt;Ljava/lang/String;&gt;;
+  #13 = Utf8               SourceFile
+  #14 = Utf8               StringType.java
+  #15 = NameAndType        #4:#5          // &quot;&lt;init&gt;&quot;:()V
+  #16 = Utf8               blog/StringType
+  #17 = Utf8               blog/AbstractType
+{
+  blog.StringType();
+    descriptor: ()V
+    flags:
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method blog/AbstractType.&quot;&lt;init&gt;&quot;:()V
+         4: return
+      LineNumberTable:
+        line 9: 0
+        line 10: 4
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lblog/StringType;
+}
+Signature: #12                          // Lblog/AbstractType&lt;Ljava/lang/String;&gt;;
+SourceFile: &quot;StringType.java&quot;
+</code></pre>
+<p>然后我们可以通过反射获取对应的类型信息，下面看看获取的方法。</p>
+<p><strong><em>核心代码<code>Type superclass = getClass().getGenericSuperclass();</code></em></strong></p>
+<p><em>getClass()</em>方法我们不陌生，就是获取当前类，在前面的例子中就是对应的<em>IntegerType.class</em>等。这里主要看<em>getGenericSuperclass()</em>方法。</p>
+<pre><code class="java"> /**
+     * Returns the {@code Type} representing the direct superclass of
+     * the entity (class, interface, primitive type or void) represented by
+     * this {@code Class}.
+     *
+     * &lt;p&gt;If the superclass is a parameterized type, the {@code Type}
+     * object returned must accurately reflect the actual type
+     * parameters used in the source code. The parameterized type
+     * representing the superclass is created if it had not been
+     * created before. See the declaration of {@link
+     * java.lang.reflect.ParameterizedType ParameterizedType} for the
+     * semantics of the creation process for parameterized types.  If
+     * this {@code Class} represents either the {@code Object}
+     * class, an interface, a primitive type, or void, then null is
+     * returned.  If this object represents an array class then the
+     * {@code Class} object representing the {@code Object} class is
+     * returned.
+     *
+     * @throws java.lang.reflect.GenericSignatureFormatError if the generic
+     *     class signature does not conform to the format specified in
+     *     &lt;cite&gt;The Java&amp;trade; Virtual Machine Specification&lt;/cite&gt;
+     * @throws TypeNotPresentException if the generic superclass
+     *     refers to a non-existent type declaration
+     * @throws java.lang.reflect.MalformedParameterizedTypeException if the
+     *     generic superclass refers to a parameterized type that cannot be
+     *     instantiated  for any reason
+     * @return the superclass of the class represented by this object
+     * @since 1.5
+     */
+    public Type getGenericSuperclass() {
+        ClassRepository info = getGenericInfo();
+        if (info == null) {
+            return getSuperclass();
+        }
+
+        // Historical irregularity:
+        // Generic signature marks interfaces with superclass = Object
+        // but this API returns null for interfaces
+        if (isInterface()) {
+            return null;
+        }
+
+        return info.getSuperclass();
+    }
+</code></pre>
+<h3 id="关于-Type"><a href="#关于-Type" class="headerlink" title="关于 Type"></a>关于 Type</h3><p>Type是一个接口，对应的实现类为Class。ParameterizedType是Type的子接口，ParameterizedType的实现类为ParameterizedTypeImpl。</p>
+<h3 id="关于-getGenericSuperclass-方法"><a href="#关于-getGenericSuperclass-方法" class="headerlink" title="关于 getGenericSuperclass() 方法"></a>关于 getGenericSuperclass() 方法</h3><p>该方法返回当前类的直接父类信息（包含泛型参数信息），如果当父类不含泛型信息时，直接返回普通的父类信息。结合前面的例子来解释：</p>
 <ul>
-<li><p>标记-清除算法<br>标记内存中不再被引用的对象,然后在标记完成后进行统一回收.<br>不足:一是效率问题,标记和清除的过程都需要花费一定时间；二是标记清除后产生大量不连续的内存碎片,当大的对象生成时需要分配空间就无法分配了.<br>代表收集器: CMS收集器，G1收集器</p>
+<li><p>如果类定义是<code>public class IntegerType extends AbstractType&lt;Integer&gt;</code>,那么返回的Type是ParameterizedTypeImpl对象（包含泛型参数信息，参数见actualTypeArguments）</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/generic1.png" alt="generic1"></p>
+<p>​</p>
 </li>
-<li><p>复制算法<br>将内存区域一分为二(A和B),一开始内存分配时都用A部分进行分配,当进行回收时,将A上存活的内存直接复制到B上,然后清空A上所有内存的使用.<br>不足:一半空间浪费掉了；当存活下来的对象比较多时需要进行较多的复制操作.<br>在垃圾收集器的新生代中都基本采用该回收算法.我们一般将堆内存划分为新生代和老年代,新生代发生的垃圾回收称为young GC，老年代发生的垃圾回收称为full GC.<br>年轻代分为Eden，S0和S1三个部分，一开始这3个区域被使用都是0，随着新生代内存的不断分配，Eden在逐渐增加，当达到100%时会发生一次young GC，此时存活下来的对象会被放在S0，然后Eden被清空，下一次young GC时，将S0和Eden中存活下来的对象移至S1，清空S0和Eden.<br>代表收集器：Serial收集器</p>
+<li><p>如果类定义为<code>public class IntegerType extends AbstractType</code>则返回的Type是Class对象</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/generic2.png" alt="generic2"></p>
 </li>
 </ul>
 <ul>
-<li>标记-整理算法<br>标记内存中不再被引用的对象，然后将存活下来的对象都移动到一端，接着直接清楚掉边界端以外的内存。<br>不足：相对与标记-清楚算法多了一部移动存活对象的操作，可能在耗时上会多一些.<br>代表收集器:Serial Old收集器，Parallel Old收集器</li>
-</ul>
-<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>垃圾收集器实际上是对上面垃圾回收算法的一个具体实现，新生代和老年代可以使用的垃圾收集器如下图：<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/202221196607437.png" alt="垃圾收集器图"><br>从图中可以看到当使用某个新生代的垃圾收集器时，其对应的老年代的垃圾收集器可选的种类是确定的，一般实际开发中常用ParNew和CMS。</p>
-<ul>
-<li><p>Serial收集器<br>单线程版本的垃圾收集器，采用复制算法，进行的垃圾回收时会暂停所有的用户线程。</p>
-</li>
-<li><p>Serial Old收集器<br>单线程版本的垃圾收集器，采用标记-整理，进行垃圾回收时会暂停所有的用户线程。</p>
-</li>
-<li><p>ParNew收集器<br>实际上是Serial的多线程版本，在进行垃圾回收时会由多个线程进行回收，进行垃圾回收时还是会暂停所有的用户线程。</p>
-</li>
-<li><p>Parallel Scavenge收集器<br>多线程进行垃圾回收，采用复制算法，与ParNew的区别时是可以通过配置相关参数调节暂停时间和回收的吞吐量(运行用户代码时间/(运行用户代码时间+垃圾收集时间))，进行垃圾回收时会暂停所有的用户线程</p>
-</li>
-<li><p>Parallel Old收集器<br>多线程进行垃圾回收，采用标记-整理算法，和Parallel Scavenge类似也是注重吞吐量，进行垃圾回收时会暂停所有的用户线程。</p>
-</li>
-<li><p>CMS收集器<br>采用标记-清楚算法，注重最短回收停顿时间，可以在进行垃圾回收时不暂停用户线程，分为初始标记（STW）-&gt;并发标记-&gt;重新标记（STW）-&gt;并发回收。由于采用标记-清楚算法，所以会产生内存碎片，最终导致无法给大的对象分配内存，所以一般当老年代内存占用没到达100%就促发full GC，这个促发百分比可以通过相关参数可以设置。</p>
-</li>
-<li><p>G1收集器<br>整体看来采用标记-整理算法，局部Region之间采用复制算法，注重最短回收停顿时间，分为初始标记（STW）-&gt;并发标记-&gt;最终标记（STW）-&gt;筛选回收（STW）四个阶段。</p>
+<li><p>另外如果此类表示Object类，接口，基元类型或void，则返回null。如果此对象表示一个数组类，则返回表示Object类的Class对象</p>
+<pre><code class="java">Integer[] array = new Integer[2];
+System.out.println(int.class.getGenericSuperclass()); //null
+System.out.println(Test.class.getGenericSuperclass()); //null       Test是定义的接口
+System.out.println(Object.class.getGenericSuperclass()); //null
+System.out.println(void.class.getGenericSuperclass()); //null
+System.out.println(array.getClass().getGenericSuperclass()); //class java.lang.Object
+</code></pre>
 </li>
 </ul>
+<p>###获取T类型</p>
+<p>最后泛型T到底怎么取呢，细心的同学可能已经发现了，上面的示例图中actualTypeArguments带的数组中第一个类型就是Integer的class对象，那么为啥还要用guava的TypeToken.of处理一下，而不是直接type = (Class<t>) runtimeType。原因是因为实例中还有AbstractType&lt;List<integer>&gt;这种情况，对应的T实际上并非Class类型，而是ParameterizedTypeImpl类型，所以还需要特殊处理获得List类信息，这些可以交给TypeToken.of帮我们做，TypeToken.of实际上是进行了一些类型判断，会针对这种ParameterizedTypeImpl类型的直接取rawType。 </integer></t></p>
+<h3 id="其他方式"><a href="#其他方式" class="headerlink" title="其他方式"></a>其他方式</h3><p>实际上Spring也提供了一个动态获取泛型T的Class类型的方法，当然底层还是基于上面提到的getGenericSuperclass()方法实现的，不再做详细描述。</p>
+<p><code>Class&lt;&gt;type = (Class&lt;T&gt;) GenericTypeResolver.resolveTypeArgument(this.getClass(), AbstractType.class);//spring实现</code></p>
+<p>参考:</p>
+<p><a href="http://rednaxelafx.iteye.com/blog/586212" target="_blank" rel="noopener">http://rednaxelafx.iteye.com/blog/586212</a></p>
 
                 </div>
             </section>
@@ -154,14 +367,14 @@
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2017/03/03/动态规划算法浅谈/">
-        ← 动态规划算法浅谈
+    <a class="prev-post" href="/2018/04/23/获取bing每日图片/">
+        ← 获取bing每日图片
     </a>
     
     <span class="prev-next-post">•</span>
     
-    <a class="next-post" href="/2016/02/28/JVM初探/">
-        JVM初探-内存区域划分 →
+    <a class="next-post" href="/2017/05/07/数据库基本概念/">
+        数据库基本概念 →
     </a>
     
     
@@ -184,7 +397,7 @@
 <div class="toc-main" style="right: -100%">
     <div class="post-toc">
         <span>TOC</span>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器算法"><span class="toc-text">垃圾收集器算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器"><span class="toc-text">垃圾收集器</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java泛型的概念"><span class="toc-text">java泛型的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态获取泛型Class类型"><span class="toc-text">动态获取泛型Class类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理分析"><span class="toc-text">原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-Type"><span class="toc-text">关于 Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-getGenericSuperclass-方法"><span class="toc-text">关于 getGenericSuperclass() 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他方式"><span class="toc-text">其他方式</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
 
