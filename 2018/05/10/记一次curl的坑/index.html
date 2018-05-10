@@ -117,7 +117,7 @@
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
                     <h1 id="SpringMVC对象解析的“浅坑”"><a href="#SpringMVC对象解析的“浅坑”" class="headerlink" title="SpringMVC对象解析的“浅坑”"></a>SpringMVC对象解析的“浅坑”</h1><blockquote>
-<p>这次被坑主要原因不在curl，不过算是背景吧，也顺带记一下。如果想直接看curl的坑请跨过该“浅坑”，直接到后面的“深坑”。</p>
+<p>SpringMVC这个坑主要原因不在curl，不过算是背景吧，也顺带记一下。如果想直接看curl的坑请跨过该“浅坑”，直接到后面的“深坑”。</p>
 </blockquote>
 <p>最近在写一个接口，接受个推推送的回执数据，由于看文档那边推送的数据是json格式的，所以就想着直接用一个对象接受数据，如下：</p>
 <pre><code class="java">public GetuiResponse getuiCallback(@RequestBody GetuiCallback getuiCallback)
@@ -213,9 +213,9 @@
 </code></pre>
 <p>观察上面代码可以看到，如果让SpringMVC来解析请求的数据，它会先遍历已有的转化器集合，里面包含JSON，XML等等转化器,如下图。不同的解析器会支持对应的MediaType，代码中会根据用户请求头中的ContentType值来做判断，确定具体使用哪种converter（详见<code>converter.canRead(targetClass, contentType)</code>）。</p>
 <p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-10%20%E4%B8%8B%E5%8D%8811.20.56.png" alt="converts"></p>
-<p>所以问题就很清楚了，个推那边请求时，请求头中的<strong>ContentType</strong>给的值是<code>application/unknown;charset=UTF-8</code> ，跟我们想要的<code>MappingJackson2HttpMessageConverter</code>所支持的<code>application/json</code>，<code>application/*+json</code>不匹配，所以没有定位到<code>MappingJackson2HttpMessageConverter</code>。而且也成功绕过了所有的converter（因为没有一个MediaType是对应<code>application/unknown;charset=UTF-8</code>这么坑的的类型），所以最后抛异常了。</p>
+<p>所以问题就很清楚了，个推那边请求时，请求头中的<strong>ContentType</strong>给的值是<code>application/unknown;charset=UTF-8</code> ，跟我们想要的<code>MappingJackson2HttpMessageConverter</code>所支持的<code>application/json</code>，<code>application/*+json</code>不匹配，所以没有定位到<code>MappingJackson2HttpMessageConverter</code>。而且也成功绕过了所有的converter（因为没有一个MediaType是对应<code>application/unknown;charset=UTF-8</code>这么坑的类型），所以最后抛异常了。</p>
 <p>测试环境之所以没有测出来是因为我用swagger生成的curl默认给我加了<code>--header &#39;Content-Type: application/json&#39;</code>，毕竟swagger很规范，知道我请求的数据是json。</p>
-<p>解决办法就是用<code>HttpServletRequest request</code>来接受请求，从输入流中获取数据自己转。这一改动没毛病，但是测试时却被curl坑了一波，请接着往下看。</p>
+<p>解决办法请接着往下看。</p>
 <h1 id="curl请求默认ContentType的“深坑”"><a href="#curl请求默认ContentType的“深坑”" class="headerlink" title="curl请求默认ContentType的“深坑”"></a>curl请求默认ContentType的“深坑”</h1><p>上面的问题解决办法是改成这样接受请求<code>public GetuiResponse getuiCallback(HttpServletRequest request)</code>,然后从request中拿到InputStream读出请求体JSON数据自己用ObjectMapper（jackson转化的一个类）转成对象。</p>
 <p>写完后用POST man测试正常，想再用curl测试一下。考虑到之前是ContentType造成的问题，这次改成读流的方式就不传ContentType了。</p>
 <p>大致请求是这样：</p>
@@ -239,7 +239,7 @@
 <p>4 Servlet调用了getParameter系列方法</p>
 </blockquote>
 <p><em>JSR-340 3.1.1</em></p>
-<p>然后调试发现如果没有设置curl的ContentType，它会默认传<code>application/x-www-form-urlencoded</code>，而且确实会将数据填充到request的parameter中去（前提是curl中的data数据是k=v的形式），这样就造成了stream流已经被读完了，后面再读就是空的了。</p>
+<p>然后调试发现如果没有设置curl的ContentType，它会默认传<code>application/x-www-form-urlencoded</code>，这样就导致request中的stream流已经被读完了，后面再读就是空的了。</p>
 <p>于是curl请求改下，加个任意的ContentType头，这样就不满足Servlet规范就可以了。</p>
 <pre><code class="shell"> curl --request POST \
   --url http://xxx/callback/getui \
