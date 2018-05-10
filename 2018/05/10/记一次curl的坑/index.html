@@ -16,7 +16,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>redis下sentinel实验 | linxiaobai's blog</title>
+	<title>记一次curl的坑 | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -99,43 +99,157 @@
     <div class="inner">
         <header class="post-full-header">
             <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2015-03-17T07:43:47.000Z" itemprop="datePublished">
-                    2015-03-17
+                <time  class="post-full-meta-date" datetime="2018-05-10T14:49:42.000Z" itemprop="datePublished">
+                    2018-05-10
                 </time>
                 
                 <span class="date-divider">/</span>
                 
-                <a href="/categories/redis/">redis</a>&nbsp;&nbsp;
-                
                 
             </section>
-            <h1 class="post-full-title">redis下sentinel实验</h1>
+            <h1 class="post-full-title">记一次curl的坑</h1>
         </header>
-        <article class="post-full no-image">
+        <article class="post-full ">
+            
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/LulworthCoveDorset_ZH-CN6277179800_1920x1080.jpg)">
+            </figure>
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <blockquote>
-<p>很早以前在2台阿里云服务器上把redis主备给搭好了,但是一直纠结的是阿里云好像不支持vip,没办法做主从切换,万一主服务器崩了就完蛋咯.<br>先不考虑服务器端环境,学习一下redis自身关于HA(hign available)的实现–sentinel.<br>下面开始做实验看看它的实际效果.</p>
+                    <h1 id="SpringMVC对象解析的“浅坑”"><a href="#SpringMVC对象解析的“浅坑”" class="headerlink" title="SpringMVC对象解析的“浅坑”"></a>SpringMVC对象解析的“浅坑”</h1><blockquote>
+<p>这次被坑主要原因不在curl，不过算是背景吧，也顺带记一下。如果想直接看curl的坑请跨过该“浅坑”，直接到后面的“深坑”。</p>
 </blockquote>
-<hr>
-<h1 id="一-配置master和slave-为了方便-所有操作均在一台电脑上-通过改变端口号去模拟多台服务器"><a href="#一-配置master和slave-为了方便-所有操作均在一台电脑上-通过改变端口号去模拟多台服务器" class="headerlink" title="一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)"></a>一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)</h1><p>1.用<code>mkdir testRedis</code>指令建一个测试目录</p>
-<p>2.将redis-2.8.19拷贝到该目录下,并且再复制其多个副本<br>一共copy3个出来就行,分别命名redis1,redis2,redis3,注意linux下拷贝目录用<code>cp -r xx xx</code>指令,别把-r丢了 </p>
-<p>3.将redis1里面的redis.conf配置文件中的port值设置为6380,其余2个别设置为6381和6382,并且在后2个配置<em>slave of 127.0.0.1 6380</em><br>这样最终设置成的环境是redis1目录里面运行的是主,redis2和redis3是它的从,如下图</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelms.png" alt="ms"></p>
-<h1 id="二-配置并执行sentinel"><a href="#二-配置并执行sentinel" class="headerlink" title="二.配置并执行sentinel"></a>二.配置并执行sentinel</h1><p>1.修改redis1里面sentinel.conf配置文件<br>需要修改的参数有<br>    <em>port 26380</em><br>    <em>sentinel monitor mymaster 127.0.0.1 6380 2</em><br>    <em>sentinel down-after-milliseconds mymaster 30000</em><br>    <em>sentinel failover-timeout mymaster 10000</em></p>
-<p>第一个参数就是sentinel进程占用的端口号,我们需要配置每个sentinel.conf的端口号不相同,即在redis2,redis3里面的设置成26381和26382;<br>第二个参数是监听的master身份的redis服务器,mymaster应该就是一个别名吧,应该是用来跟其他参数统一配置,例如下面均为mymaster,最后面的那个2表示的意思是:<br>最少有2个sentinel进程认为master挂掉了,才会更换master;<br>第三个参数表示当master服务器端失去连接30秒了,就换master;<br>第四个参数表示易主之前,最后需要等待的时间,因为做测试,所以改成10秒.</p>
-<p>2.运行3个sentinel实例<br>在src下面有redis-sentinel脚本,和启动redis服务一样,输入<code>redis-sentinel ../sentinel.conf</code>即开始运行</p>
-<h1 id="三-手动down掉master服务器-然后看图说话"><a href="#三-手动down掉master服务器-然后看图说话" class="headerlink" title="三.手动down掉master服务器,然后看图说话"></a>三.手动down掉master服务器,然后看图说话</h1><p>1.用ctrl+C关闭redis1里对于的那个master</p>
-<p><strong>大哥一挂,小弟们纷纷呼唤着大哥归来</strong><br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelfind.png" alt="图1"></p>
-<p><strong>30秒过去了,大哥仍无视2小弟的呼唤,2小弟开始去sentinel报案说master挂机了,团战没C位怎么打</strong><br><strong>于是sentinel认为这个大哥太垃圾了,跟2个小弟说:’你们2个自己投票吧,选一个人当C位’</strong><br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelsentinelSwitchM" alt="图2"></p>
-<p><strong>这里10秒钟的failover-timeout配的不好,应该要大于30秒比较好,如果设置成了默认的5分钟.2小弟就还要再用5分钟去彼此同步大哥的装备(数据)</strong><br><strong>看到Next failover delay:后面的话了吗,那个时间就是当前时间加上上面配置的failover-timeout时间,即在进行故障转移之前需要等这么长时间,具体用途应该是修改配置文件或是同步数据之类的吧</strong></p>
-<p>2.sentinel产生了新的master</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelnewmaster.png" alt="图3"></p>
-<p>3.当原先的master重写连接上</p>
-<p><strong>老的大哥网吧断电了,终于reconnect了,但是发现小弟已经不认它了,它只能被迫改行当小弟</strong></p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelreconnect.png" alt="图5"></p>
-<p>4.查看配置文件发现slaveof属性发生了改变<br>redis2(端口号6381)的变为 <em>slaveof 127.0.0.1 6382</em><br>另外新master里面的sentinel配置文件会有部分变动</p>
+<p>最近在写一个接口，接受个推推送的回执数据，由于看文档那边推送的数据是json格式的，所以就想着直接用一个对象接受数据，如下：</p>
+<pre><code class="java">public GetuiResponse getuiCallback(@RequestBody GetuiCallback getuiCallback)
+</code></pre>
+<p>测试都好好的，没想到一上线就跪了，抛下面异常：</p>
+<pre><code class="java">org.springframework.web.HttpMediaTypeNotSupportedException: Content type &#39;application/unknown;charset=UTF-8&#39; not supported
+    at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:237)
+    at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:150)
+    at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:128)
+</code></pre>
+<p>然后紧急回滚后开始排查问题。照着异常栈信息定位到SpringMVC的解析数据的代码：</p>
+<pre><code class="java">protected &lt;T&gt; Object readWithMessageConverters(HttpInputMessage inputMessage, MethodParameter parameter,
+            Type targetType) throws IOException, HttpMediaTypeNotSupportedException, HttpMessageNotReadableException {
+
+        MediaType contentType;
+        boolean noContentType = false;
+        try {
+            contentType = inputMessage.getHeaders().getContentType();
+        }
+        catch (InvalidMediaTypeException ex) {
+            throw new HttpMediaTypeNotSupportedException(ex.getMessage());
+        }
+        if (contentType == null) {
+            noContentType = true;
+            contentType = MediaType.APPLICATION_OCTET_STREAM;
+        }
+
+        Class&lt;?&gt; contextClass = (parameter != null ? parameter.getContainingClass() : null);
+        Class&lt;T&gt; targetClass = (targetType instanceof Class ? (Class&lt;T&gt;) targetType : null);
+        if (targetClass == null) {
+            ResolvableType resolvableType = (parameter != null ?
+                    ResolvableType.forMethodParameter(parameter) : ResolvableType.forType(targetType));
+            targetClass = (Class&lt;T&gt;) resolvableType.resolve();
+        }
+
+        HttpMethod httpMethod = ((HttpRequest) inputMessage).getMethod();
+        Object body = NO_VALUE;
+
+        try {
+            inputMessage = new EmptyBodyCheckingHttpInputMessage(inputMessage);
+
+            for (HttpMessageConverter&lt;?&gt; converter : this.messageConverters) {
+                Class&lt;HttpMessageConverter&lt;?&gt;&gt; converterType = (Class&lt;HttpMessageConverter&lt;?&gt;&gt;) converter.getClass();
+                if (converter instanceof GenericHttpMessageConverter) {
+                    GenericHttpMessageConverter&lt;?&gt; genericConverter = (GenericHttpMessageConverter&lt;?&gt;) converter;
+                    if (genericConverter.canRead(targetType, contextClass, contentType)) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(&quot;Read [&quot; + targetType + &quot;] as \&quot;&quot; + contentType + &quot;\&quot; with [&quot; + converter + &quot;]&quot;);
+                        }
+                        if (inputMessage.getBody() != null) {
+                            inputMessage = getAdvice().beforeBodyRead(inputMessage, parameter, targetType, converterType);
+                            body = genericConverter.read(targetType, contextClass, inputMessage);
+                            body = getAdvice().afterBodyRead(body, inputMessage, parameter, targetType, converterType);
+                        }
+                        else {
+                            body = getAdvice().handleEmptyBody(null, inputMessage, parameter, targetType, converterType);
+                        }
+                        break;
+                    }
+                }
+                else if (targetClass != null) {
+                    if (converter.canRead(targetClass, contentType)) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(&quot;Read [&quot; + targetType + &quot;] as \&quot;&quot; + contentType + &quot;\&quot; with [&quot; + converter + &quot;]&quot;);
+                        }
+                        if (inputMessage.getBody() != null) {
+                            inputMessage = getAdvice().beforeBodyRead(inputMessage, parameter, targetType, converterType);
+                            body = ((HttpMessageConverter&lt;T&gt;) converter).read(targetClass, inputMessage);
+                            body = getAdvice().afterBodyRead(body, inputMessage, parameter, targetType, converterType);
+                        }
+                        else {
+                            body = getAdvice().handleEmptyBody(null, inputMessage, parameter, targetType, converterType);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        catch (IOException ex) {
+            throw new HttpMessageNotReadableException(&quot;Could not read document: &quot; + ex.getMessage(), ex);
+        }
+
+        if (body == NO_VALUE) {
+            if (httpMethod == null || !SUPPORTED_METHODS.contains(httpMethod) ||
+                    (noContentType &amp;&amp; inputMessage.getBody() == null)) {
+                return null;
+            }
+            throw new HttpMediaTypeNotSupportedException(contentType, this.allSupportedMediaTypes); //异常抛自这里
+        }
+
+        return body;
+    }
+</code></pre>
+<p>观察上面代码可以看到，如果让SpringMVC来解析请求的数据，它会先遍历已有的转化器集合，里面包含JSON，XML等等转化器,如下图。不同的解析器会支持对应的MediaType，代码中会根据用户请求头中的ContentType值来做判断，确定具体使用哪种converter（详见<code>converter.canRead(targetClass, contentType)</code>）。</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-10%20%E4%B8%8B%E5%8D%8811.20.56.png" alt="converts"></p>
+<p>所以问题就很清楚了，个推那边请求时，请求头中的<strong>ContentType</strong>给的值是<code>application/unknown;charset=UTF-8</code> ，跟我们想要的<code>MappingJackson2HttpMessageConverter</code>所支持的<code>application/json</code>，<code>application/*+json</code>不匹配，所以没有定位到<code>MappingJackson2HttpMessageConverter</code>。而且也成功绕过了所有的converter（因为没有一个MediaType是对应<code>application/unknown;charset=UTF-8</code>这么坑的的类型），所以最后抛异常了。</p>
+<p>测试环境之所以没有测出来是因为我用swagger生成的curl默认给我加了<code>--header &#39;Content-Type: application/json&#39;</code>，毕竟swagger很规范，知道我请求的数据是json。</p>
+<p>解决办法就是用<code>HttpServletRequest request</code>来接受请求，从输入流中获取数据自己转。这一改动没毛病，但是测试时却被curl坑了一波，请接着往下看。</p>
+<h1 id="curl请求默认ContentType的“深坑”"><a href="#curl请求默认ContentType的“深坑”" class="headerlink" title="curl请求默认ContentType的“深坑”"></a>curl请求默认ContentType的“深坑”</h1><p>上面的问题解决办法是改成这样接受请求<code>public GetuiResponse getuiCallback(HttpServletRequest request)</code>,然后从request中拿到InputStream读出请求体JSON数据自己用ObjectMapper（jackson转化的一个类）转成对象。</p>
+<p>写完后用POST man测试正常，想再用curl测试一下。考虑到之前是ContentType造成的问题，这次改成读流的方式就不传ContentType了。</p>
+<p>大致请求是这样：</p>
+<pre><code class="shell">  curl --request POST \
+  --url http://xxx/callback/getui \
+  --data &#39;{数据保密}&#39;
+</code></pre>
+<p>结果又发现服务端报：</p>
+<pre><code class="java">com.fasterxml.jackson.databind.JsonMappingException: No content to map due to end-of-input
+ at [Source: com.enniu.cloud.service.server.filter.BaseServletRequestWrapper$ResettableServletInputStream@2fc8503; line: 1, column: 0]
+    at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:270)
+    at com.fasterxml.jackson.databind.ObjectMapper._initForReading(ObjectMapper.java:3838)
+    at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:3783)
+</code></pre>
+<p>调试后发现从request中的InputStream读出来的数据是空的，导致ObjectMapper转化空数据报错，很困惑，为啥postman测试都可以，用charles抓包发现请求体却是是有数据的，实在不知道问题出在哪。</p>
+<p>于是开始在网上搜索原因，找到了这个：</p>
+<blockquote>
+<p>根据Servlet规范，如果同时满足下列条件，则请求体(Entity)中的表单数据，将被填充到request的parameter集合中（request.getParameter系列方法可以读取相关数据）：<br>1 这是一个HTTP/HTTPS请求</p>
+<p>2 请求方法是POST（querystring无论是否POST都将被设置到parameter中）</p>
+<p>3 请求的类型（Content-Type头）是application/x-www-form-urlencoded</p>
+<p>4 Servlet调用了getParameter系列方法</p>
+</blockquote>
+<p><em>JSR-340 3.1.1</em></p>
+<p>然后调试发现如果没有设置curl的ContentType，它会默认传<code>application/x-www-form-urlencoded</code>，而且确实会将数据填充到request的parameter中去（前提是curl中的data数据是k=v的形式），这样就造成了stream流已经被读完了，后面再读就是空的了。</p>
+<p>于是curl请求改下，加个任意的ContentType头，这样就不满足Servlet规范就可以了。</p>
+<pre><code class="shell"> curl --request POST \
+  --url http://xxx/callback/getui \
+  --header &#39;Content-Type: application/unknown;charset=UTF-8&#39; \
+  --data &#39;{数据保密}&#39;
+</code></pre>
+<p>这下问题终于水落石出了，当然代码写的是没有问题的，因为个推那边不是用curl给我们推数据，只是测试过程中遇到这种坑还是陷的蛮深的，纠结了好长时间。</p>
+<p>参考链接：</p>
+<p><a href="https://blog.csdn.net/liuyang755855737/article/details/79998716" target="_blank" rel="noopener">https://blog.csdn.net/liuyang755855737/article/details/79998716</a></p>
+<p><a href="https://jcp.org/en/jsr/detail?id=340" target="_blank" rel="noopener">https://jcp.org/en/jsr/detail?id=340</a></p>
 
                 </div>
             </section>
@@ -145,14 +259,10 @@
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2015/04/06/GeoHash的简单使用例子/">
-        ← GeoHash的简单使用例子
-    </a>
-    
     <span class="prev-next-post">•</span>
     
-    <a class="next-post" href="/2015/01/31/redis用scan进行数据的迭代遍历/">
-        redis用scan进行数据的迭代遍历 →
+    <a class="next-post" href="/2018/04/27/java注解概念及运用/">
+        java注解概念及运用 →
     </a>
     
     
@@ -175,7 +285,7 @@
 <div class="toc-main" style="right: -100%">
     <div class="post-toc">
         <span>TOC</span>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一-配置master和slave-为了方便-所有操作均在一台电脑上-通过改变端口号去模拟多台服务器"><span class="toc-text">一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二-配置并执行sentinel"><span class="toc-text">二.配置并执行sentinel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三-手动down掉master服务器-然后看图说话"><span class="toc-text">三.手动down掉master服务器,然后看图说话</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SpringMVC对象解析的“浅坑”"><span class="toc-text">SpringMVC对象解析的“浅坑”</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#curl请求默认ContentType的“深坑”"><span class="toc-text">curl请求默认ContentType的“深坑”</span></a></li></ol>
     </div>
 </div>
 
