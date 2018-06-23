@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html>
+
+
+
+
+
+
+
+<head>
+	
+	<meta charset="UTF-8"/>
+	<meta name="HandheldFriendly" content="True" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	
+	<meta name="theme-color" content="#3c484e">
+	
+	<title>ClassLoader原理以及SPI使用 | linxiaobai's blog</title>
+	<meta name="description" content="自由の風" />
+	<meta name="generator" content="linxiaobai's blog">
+
+	
+
+	
+	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+</head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links">
+    
+    <a class="social-link" href="https://weibo.com/chomd777" target="_blank" rel="noopener">
+        <svg class="icon" width="32px" height="28.72px" viewBox="0 0 1141 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" fill="#ffffff" /></svg>
+    </a>
+    
+    
+    <a class="social-link" href="https://github.com/linxiaobai" target="_blank" rel="noopener">
+        <svg class="icon" width="32px" height="31.24px" viewBox="0 0 1049 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" fill="#ffffff" /><path d="M199.040177 753.571326c-0.869171 2.607513-5.215026 3.476684-8.691711 1.738342s-6.084198-5.215026-4.345855-7.82254c0.869171-2.607513 5.215026-3.476684 8.691711-1.738342s5.215026 5.215026 4.345855 7.82254z m-6.953369-4.345856M219.900283 777.038945c-2.607513 2.607513-7.82254 0.869171-10.430053-2.607514-3.476684-3.476684-4.345855-8.691711-1.738342-11.299224 2.607513-2.607513 6.953369-0.869171 10.430053 2.607514 3.476684 4.345855 4.345855 9.560882 1.738342 11.299224z m-5.215026-5.215027M240.760389 807.459932c-3.476684 2.607513-8.691711 0-11.299224-4.345855-3.476684-4.345855-3.476684-10.430053 0-12.168395 3.476684-2.607513 8.691711 0 11.299224 4.345855 3.476684 4.345855 3.476684 9.560882 0 12.168395z m0 0M269.443034 837.011749c-2.607513 3.476684-8.691711 2.607513-13.906737-1.738342-4.345855-4.345855-6.084198-10.430053-2.607513-13.037566 2.607513-3.476684 8.691711-2.607513 13.906737 1.738342 4.345855 3.476684 5.215026 9.560882 2.607513 13.037566z m0 0M308.555733 853.526c-0.869171 4.345855-6.953369 6.084198-13.037566 4.345855-6.084198-1.738342-9.560882-6.953369-8.691711-10.430053 0.869171-4.345855 6.953369-6.084198 13.037566-4.345855 6.084198 1.738342 9.560882 6.084198 8.691711 10.430053z m0 0M351.145116 857.002684c0 4.345855-5.215026 7.82254-11.299224 7.82254-6.084198 0-11.299224-3.476684-11.299224-7.82254s5.215026-7.82254 11.299224-7.82254c6.084198 0 11.299224 3.476684 11.299224 7.82254z m0 0M391.126986 850.049315c0.869171 4.345855-3.476684 8.691711-9.560882 9.560882-6.084198 0.869171-11.299224-1.738342-12.168395-6.084197-0.869171-4.345855 3.476684-8.691711 9.560881-9.560882 6.084198-0.869171 11.299224 1.738342 12.168396 6.084197z m0 0" fill="#ffffff" /></svg>
+    </a>
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2018-05-18T14:59:38.000Z" itemprop="datePublished">
+                    2018-05-18
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                
+            </section>
+            <h1 class="post-full-title">ClassLoader原理以及SPI使用</h1>
+        </header>
+        <article class="post-full ">
+            
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/DolomitesBikeRace_ZH-CN10922620742_1920x1080.jpg)">
+            </figure>
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h1 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p><strong>ClassLoader</strong>，翻译过来就是<strong>类加载器。</strong>顾名思义，其主要的作用就是将Class文件加载到JVM中生成Class对象。</p>
+<p>类加载的过程主要分为3步：</p>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流</li>
+<li>将这个字节流所代表的静态储存结构转化为方法区的运行时数据结构</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口</li>
+</ol>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，方法区的数据储存格式由虚拟机实现自行定义。然后在内存中创建一个java.lang.Class类的对象，作为程序访问方法区中的这些类型数据的外部接口。</p>
+<h2 id="class文件详解"><a href="#class文件详解" class="headerlink" title="class文件详解"></a>class文件详解</h2><ul>
+<li><strong>文件格式</strong></li>
+</ul>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-22%20%E4%B8%8B%E5%8D%8811.17.36.png" alt="class文件格式"></p>
+<p>其中u2, u4, u8分别表示2个字节，4个字节，8个字节。info结尾的是由多个无符号数活着其他表作为数据项构成的复合数据。</p>
+<ul>
+<li><p><strong>cp_info</strong></p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-22%20%E4%B8%8B%E5%8D%8811.48.41.png" alt="cp_info"></p>
+</li>
+</ul>
+<p>cp_info中这些不同的类型常量使用的字节大小也不相同。</p>
+<p>涉及到的info信息过多，不再一一赘述，具体可以看下周志明写的《深入理解Java虚拟机》的第6章关于class的讲解。</p>
+<hr>
+<p>由于各个类型的数据之间没有分割符，所以类文件中的字节数据都是严格按上面表格顺序来的。例如开头4个字节为固定的魔数<em>cafebabe</em>，后面紧跟着2个字节是次版本号，再后面2个字节是主版本号。我们以一个简单的代码示例来简单分析下数据。</p>
+<pre><code class="java">public class Hello {
+    public static void main(String[] args) {
+        System.out.println(&quot;hello world&quot;);
+    }
+}
+</code></pre>
+<p>编译以上代码生成.class文件后用sublime打开，显示为十六进制表示如下：</p>
+<pre><code>cafe babe 0000 0034 001d 0a00 0600 0f09
+0010 0011 0800 120a 0013 0014 0700 1507
+0016 0100 063c 696e 6974 3e01 0003 2829
+5601 0004 436f 6465 0100 0f4c 696e 654e
+756d 6265 7254 6162 6c65 0100 046d 6169
+6e01 0016 285b 4c6a 6176 612f 6c61 6e67
+2f53 7472 696e 673b 2956 0100 0a53 6f75
+7263 6546 696c 6501 000a 4865 6c6c 6f2e
+6a61 7661 0c00 0700 0807 0017 0c00 1800
+1901 000b 6865 6c6c 6f20 776f 726c 6407
+001a 0c00 1b00 1c01 0005 4865 6c6c 6f01
+0010 6a61 7661 2f6c 616e 672f 4f62 6a65
+6374 0100 106a 6176 612f 6c61 6e67 2f53
+7973 7465 6d01 0003 6f75 7401 0015 4c6a
+6176 612f 696f 2f50 7269 6e74 5374 7265
+616d 3b01 0013 6a61 7661 2f69 6f2f 5072
+696e 7453 7472 6561 6d01 0007 7072 696e
+746c 6e01 0015 284c 6a61 7661 2f6c 616e
+672f 5374 7269 6e67 3b29 5600 2100 0500
+0600 0000 0000 0200 0100 0700 0800 0100
+0900 0000 1d00 0100 0100 0000 052a b700
+01b1 0000 0001 000a 0000 0006 0001 0000
+0001 0009 000b 000c 0001 0009 0000 0025
+0002 0001 0000 0009 b200 0212 03b6 0004
+b100 0000 0100 0a00 0000 0a00 0200 0000
+0300 0800 0400 0100 0d00 0000 0200 0e
+</code></pre><p>分析上诉字节码：</p>
+<ul>
+<li><em>cafe babe  0000  0034</em>     魔数 （cafebabe）， JDK次版本 (0) ，JDK主版本 （52）     52表示JDK8</li>
+<li><em>001d</em>                     常量池大小， 16 + 13 = 29。后面跟常量池数据（共包含29-1=28个常量）</li>
+<li><em>0a00 0600 0f</em>        第一个常量，类型为CONSTANT_Methodref_info，5字节大小。第一个字节为0a（表示类中方法的符号引用，即CONSTANT_Methodref_info），第2，3字节00 06表示指向声明方法的类描述符的索引（CONSTANT_Class_info），第4，5字节00 0f表示指向名称及类型描述符（CONSTANT_NameAndType）。</li>
+<li><em>09 0010 0011</em>       第二个常量，类型为CONSTANT_Fieldref_info，5字节大小。第一个字节为09（表示字段的符号引用，即CONSTANT_Fieldref_info），第2，3字节 0010 表示指向声明字段的类或者接口描述符CONSTANT_Class_info的索引项，第4，5字节 00 11 表示指向字段描述符CONSTANT_NameAndType的索引项。</li>
+</ul>
+<p>挨个解析起了过于繁琐，我们可以利用JDK自带的工具javap反编译字节码，生成较为直观的数据。</p>
+<pre><code class="java">javap -p -v Hello.class
+
+Classfile /Users/jianlin/dev/coding/java/Hello.class
+  Last modified 2018-5-22; size 415 bytes
+  MD5 checksum cb7981a0b53212d3f3005746f14b245a
+  Compiled from &quot;Hello.java&quot;
+public class Hello
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #6.#15         // java/lang/Object.&quot;&lt;init&gt;&quot;:()V
+   #2 = Fieldref           #16.#17        // java/lang/System.out:Ljava/io/PrintStream;
+   #3 = String             #18            // hello world
+   #4 = Methodref          #19.#20        // java/io/PrintStream.println:(Ljava/lang/String;)V
+   #5 = Class              #21            // Hello
+   #6 = Class              #22            // java/lang/Object
+   #7 = Utf8               &lt;init&gt;
+   #8 = Utf8               ()V
+   #9 = Utf8               Code
+  #10 = Utf8               LineNumberTable
+  #11 = Utf8               main
+  #12 = Utf8               ([Ljava/lang/String;)V
+  #13 = Utf8               SourceFile
+  #14 = Utf8               Hello.java
+  #15 = NameAndType        #7:#8          // &quot;&lt;init&gt;&quot;:()V
+  #16 = Class              #23            // java/lang/System
+  #17 = NameAndType        #24:#25        // out:Ljava/io/PrintStream;
+  #18 = Utf8               hello world
+  #19 = Class              #26            // java/io/PrintStream
+  #20 = NameAndType        #27:#28        // println:(Ljava/lang/String;)V
+  #21 = Utf8               Hello
+  #22 = Utf8               java/lang/Object
+  #23 = Utf8               java/lang/System
+  #24 = Utf8               out
+  #25 = Utf8               Ljava/io/PrintStream;
+  #26 = Utf8               java/io/PrintStream
+  #27 = Utf8               println
+  #28 = Utf8               (Ljava/lang/String;)V
+{
+  public Hello();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V
+         4: return
+      LineNumberTable:
+        line 1: 0
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #3                  // String hello world
+         5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LineNumberTable:
+        line 3: 0
+        line 4: 8
+}
+SourceFile: &quot;Hello.java&quot;
+</code></pre>
+<p>可以看到Constant pool前2个常量跟我们分析的是对应的，分别为Methodref跟Fieldref，其中Methodref的第一个参数CONSTANT_Class_info定位到第6个常量，而第6个常量又定位到第22个常量，最终表示为java/lang/Object。</p>
+<p>我们尝试改下字节码，可以看到打印的字符串hello world在第18个常量处，为了能快速定位到字节码中的位置，将hello world转成16进制数据为：<code>68 65 6c 6c 6f 20 77 6f 72 6c 64</code>,直接查找，定位到字节码第10行<code>6865 6c6c 6f20 776f 726c 64</code>。为了保证字节码其他参数不变，我们将其替换成相同长度的其他字符串。将其改成<code>68 69 20 20 6c 69 6e 6a 69 61 6e</code>(hi  linjian)。替换完成后重新执行，发现已经输出变成hi  linjian了。</p>
+<blockquote>
+<p>字节码的修改从侧面能说明字节码增强技术的可行性，我们只需要保证增强后的class文件的数据符合字节码的规范即可。</p>
+</blockquote>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><p>类从被加载到虚拟机内存中开始，到被卸载出内存为止，它的整个生命周期包括：加载，验证，准备，解析，初始化，使用和卸载。</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/v2-716d6cfd53f42a60769a85c95b9f7da8_1200x500.jpg" alt="类加载流程"></p>
+<h4 id="主要谈下加载"><a href="#主要谈下加载" class="headerlink" title="主要谈下加载"></a>主要谈下加载</h4><p>类的加载过程需要ClassLoader来完成，java提供的3个ClassLoader，分别是<code>Bootstrap ClassLoader</code>(引导类加载器)， <code>Extension ClassLoader</code>(扩展类加载器)，<code>Application ClassLoader</code>(应用类加载器)。这3个ClassLoader分别加载不同范围的类库：</p>
+<ul>
+<li>Bootstrap ClassLoader       加载$JAVA_HOME/lib目录下的，能被虚拟机识别的类库，虚拟机会按照文件名进行识别。可以通过<code>System.getProperty(&quot;sun.boot.class.path&quot;)</code>来查询哪些类库会由Bootstrap ClassLoader进行加载。</li>
+<li>Extension ClassLoader       加载$JAVA_HOME/lib/ext目录下的类库，这个没有限制，可以将其他jar包扔进去，发现通过XX.class.getClassLoader()方法打印的结果变成扩展类加载器。</li>
+<li>Application ClassLoader     加载用户类路径(ClassPath)上指定的类库</li>
+</ul>
+<p>以上类加载器有一个层级关系，称为双亲委派模型。</p>
+<blockquote>
+<p>双亲委派模型要求除了顶层的Bootstrap ClassLoader，其余的类加载器都应该有自己的父类加载器。这里类加载器之间的父子关系不是用继承来实现的，而是通过组合关系服用父加载器的代码。</p>
+</blockquote>
+<p>每个类由CLassLoader加载时，先检查是否已经被加载过①，如果没有则先交给自己的上一层类加载器来进行加载②，如果上层类加载器已经加载过了，则之间返回，否则抛出ClassNotFoundException异常后③，再调用自己的findClass()方法进行加载④。这个结合源代码好理解些：</p>
+<pre><code class="java">//ClassLoader
+
+
+protected Class&lt;?&gt; loadClass(String name, boolean resolve)
+        throws ClassNotFoundException
+    {
+        synchronized (getClassLoadingLock(name)) {
+            // First, check if the class has already been loaded
+            Class&lt;?&gt; c = findLoadedClass(name); //①
+            if (c == null) {
+                long t0 = System.nanoTime();
+                try {
+                    if (parent != null) {//②
+                        c = parent.loadClass(name, false);
+                    } else {
+                        c = findBootstrapClassOrNull(name);
+                    }
+                } catch (ClassNotFoundException e) {//③
+                    // ClassNotFoundException thrown if class not found
+                    // from the non-null parent class loader
+                }
+
+                if (c == null) {
+                    // If still not found, then invoke findClass in order
+                    // to find the class.
+                    long t1 = System.nanoTime();
+                    c = findClass(name);//④
+
+                    // this is the defining class loader; record the stats
+                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                    sun.misc.PerfCounter.getFindClasses().increment();
+                }
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+    }
+
+</code></pre>
+<p>实际上我们配置ClassPath环境变量时，将rt.jar配置到ClassPath里，加载其中的类时，当前默认的类加载器一般为Application ClassLoader，根据双亲委托规则，最终会交由Bootstrap ClassLoader类库进行加载。所以双亲委托保证了String,Object等核心类库不会因为自己重新定义一个同名类而被替换破坏。</p>
+<h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>SPI 全称为 (Service Provider Interface) ,是JDK内置的一种服务提供发现机制。</p>
+<p>一个服务(Service)通常指的是已知的接口或者抽象类，服务提供方就是对这个接口或者抽象类的实现，然后按照SPI 标准存放到资源路径META-INF/services目录下，文件的命名为该服务接口的全限定名。</p>
+<p>通俗来讲就是我们只是保留了一个接口的调用，程序运行时需要将该接口具体实现的类通过ClassLoader加载到JVM中，然后接口的调用就可以转变成具体的实现调用。从而到达在程序运行时动态给接口寻找接口的具体实现。</p>
+<h3 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h3><ol>
+<li>首先定义一个接口，表示展示试图的样式，然后利用SPI调用view方法</li>
+</ol>
+<pre><code class="Java">package spi;
+
+/**
+ * Created by jianlin on 06/14/2018.
+ */
+public interface View {
+
+    void view();
+
+}
+</code></pre>
+<pre><code class="java">package spi;
+
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
+/**
+ * Created by jianlin on 06/14/2018.
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        ServiceLoader&lt;View&gt; s = ServiceLoader.load(View.class);
+        Iterator&lt;View&gt; iterator = s.iterator();
+        while (iterator.hasNext()) {
+            View view = iterator.next();
+            view.view();
+        }
+    }
+
+}
+
+</code></pre>
+<p><em>SPI主要实现需要用到ServiceLoader，这个后面再具体分析该类实现原理。</em></p>
+<p>2.定义2种具体的实现类（当然不一定非要定义2种，定义一种也可以）</p>
+<pre><code class="java">package spi;
+
+/**
+ * Created by jianlin on 06/14/2018.
+ */
+public class HtmlView implements View{
+
+    @Override
+    public void view() {
+        System.out.println(&quot;html view&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">package spi;
+
+/**
+ * Created by jianlin on 06/14/2018.
+ */
+public class TextView implements View{
+
+    @Override
+    public void view() {
+        System.out.println(&quot;text view&quot;);
+    }
+}
+
+</code></pre>
+<p>3.声明SPI文件信息，将具体实现类的全限定名作为内容，多个实现类以换行隔开，文件名称以服务接口命名</p>
+<p>文件名：spi.View，内容：</p>
+<pre><code class="java">spi.HtmlView
+spi.TextView
+</code></pre>
+<p>4.将上述具体实现类按照SPI规范打成jar文件（即包含META-INF/services以及类信息）</p>
+<p>先将实现类的.class文件，service信息等放到一个目录中，目录结构如下：</p>
+<pre><code class="shell">.
+├── META-INF
+│   └── services
+│       └── spi.View
+└── spi
+    ├── HtmlView.class
+    └── TextView.class
+</code></pre>
+<p>然后用jdk自带的jar指令进行打包，生成一个view.jar：</p>
+<p><code>jar cvf view.jar .</code></p>
+<p>5.将view.jar加入classpath中，运行Main方法</p>
+<pre><code class="java">.
+├── spi
+│   ├── Main.class
+│   └── View.class
+└── view.jar
+</code></pre>
+<p><code>java -classpath $CLASS_PATH:view.jar spi.Main</code></p>
+<p>得到输出结果如下：</p>
+<pre><code>html view
+text view
+</code></pre><p>所以我们要采用其他的具体实现类只需要替换一个jar包即可。</p>
+<p>###原理</p>
+<p>主要实现逻辑在ServiceLoader类中，下面来分析下ServiceLoader的加载具体实现类的过程。</p>
+<pre><code class="java">public class Main {
+
+    public static void main(String[] args) {
+        ServiceLoader&lt;View&gt; s = ServiceLoader.load(View.class); //A
+        Iterator&lt;View&gt; iterator = s.iterator(); //B
+        while (iterator.hasNext()) {  //C
+            View view = iterator.next(); //D
+            view.view();
+        }
+    }
+
+}
+</code></pre>
+<p><strong>A.</strong> ServiceLoader提供了一个load方法返回指定service类型的ServiceLoader,湖区当前Thread的获取当前线程所使用的类加载器,同service一起做为参数调ServiceLoader的另一个带ClassLoader的方法。</p>
+<pre><code class="java">public static &lt;S&gt; ServiceLoader&lt;S&gt; load(Class&lt;S&gt; service) {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        return ServiceLoader.load(service, cl);
+    }
+</code></pre>
+<p>具体实例化链路如下，主要目的是初始化一个带LazyIterator成员变量的ServiceLoader对象，此时并没有开始解析META配置文件。</p>
+<pre><code class="java">ServiceLoader.load(service) -&gt; ServiceLoader.load(service, cl) -&gt; new ServiceLoader&lt;&gt;(service, loader) -&gt; new LazyIterator(service, loader)
+</code></pre>
+<blockquote>
+<p>对Thread.currentThread().getContextClassLoader()有疑问的可以看下R大的解答。</p>
+<p>Thread context class loader存在的目的主要是为了解决parent delegation机制下无法干净的解决的问题。假如有下述委派链：  ClassLoader A -&gt; System class loader -&gt; Extension class loader -&gt; Bootstrap class loader   那么委派链左边的ClassLoader就可以很自然的使用右边的ClassLoader所加载的类。   但如果情况要反过来，是右边的ClassLoader所加载的代码需要反过来去找委派链靠左边的ClassLoader去加载东西怎么办呢？没辙，parent delegation是单向的，没办法反过来从右边找左边。   这种情况下就可以把某个位于委派链左边的ClassLoader设置为线程的context class loader，这样就给机会让代码不受parent delegation的委派方向的限制而加载到类了。</p>
+</blockquote>
+<p><strong>B.</strong>利用A步骤中实例化的LazyIterator对象来构建ServiceLoader的一个迭代器,lookupIterator就是ServiceLoader中LazyIterator对象变量名。</p>
+<pre><code class="java">public Iterator&lt;S&gt; iterator() {
+        return new Iterator&lt;S&gt;() {
+
+            Iterator&lt;Map.Entry&lt;String,S&gt;&gt; knownProviders
+                = providers.entrySet().iterator();
+
+            public boolean hasNext() {
+                if (knownProviders.hasNext())
+                    return true;
+                return lookupIterator.hasNext();
+            }
+
+            public S next() {
+                if (knownProviders.hasNext())
+                    return knownProviders.next().getValue();
+                return lookupIterator.next();
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+
+        };
+    }
+</code></pre>
+<p><strong>C.</strong>执行LazyIterator#hasNextService方法来解析META目录中的文件，fullName是由常量PREFIX(META-INF/services/) 跟接口的全限定名拼接成的，这就是SPI要求的文件名称以接口的全限定名命名的原因。将解析的类名存放在LazyIterator中的String类型的成员变量nextName中。这里可以看到利用之前的ClassLoader#getResources方法来将文件中的内容解析到configs中。这里迭代器pending会在LazyIterator第一次迭代时初始化，通过parse方法读取文件来返回一个集合[spi.HtmlView, spi.TextView]。故nextName在第一次执行完hasNextService后赋值为spi.HtmlView。</p>
+<pre><code class="java">//LazyIterator成员变量
+
+Class&lt;S&gt; service; //步骤A中赋值为View.class
+ClassLoader loader; //步骤A中赋值为当前线程中获取的ClassLoader
+Enumeration&lt;URL&gt; configs = null;
+Iterator&lt;String&gt; pending = null;
+String nextName = null;
+
+
+
+private boolean hasNextService() {
+    if (nextName != null) {
+        return true;
+    }
+    if (configs == null) {
+        try {
+            String fullName = PREFIX + service.getName();
+            if (loader == null)
+                configs = ClassLoader.getSystemResources(fullName);
+            else
+                configs = loader.getResources(fullName);
+        } catch (IOException x) {
+            fail(service, &quot;Error locating configuration files&quot;, x);
+        }
+    }
+    while ((pending == null) || !pending.hasNext()) {
+        if (!configs.hasMoreElements()) {
+            return false;
+        }
+        pending = parse(service, configs.nextElement());
+    }
+    nextName = pending.next();
+    return true;
+}
+</code></pre>
+<p><strong>D.</strong>步骤C中已经拿到类的全限定名nextName，通过Class.forName来将Class文件通过ClassLoader加载到JVM中并且生产Class对象，还是通过前面获取的ClassLoader来加载类。得到Class对象后通过newInstance()方法实例化对象，存放到providers map中，然后返回实例化的对象，这时我们就已经拿到View接口实现类的对象了，可以执行实现类的具体方法。</p>
+<pre><code class="java">private S nextService() {
+            if (!hasNextService())
+                throw new NoSuchElementException();
+            String cn = nextName;
+            nextName = null;
+            Class&lt;?&gt; c = null;
+            try {
+                c = Class.forName(cn, false, loader);
+            } catch (ClassNotFoundException x) {
+                fail(service,
+                     &quot;Provider &quot; + cn + &quot; not found&quot;);
+            }
+            if (!service.isAssignableFrom(c)) {
+                fail(service,
+                     &quot;Provider &quot; + cn  + &quot; not a subtype&quot;);
+            }
+            try {
+                S p = service.cast(c.newInstance());
+                providers.put(cn, p);
+                return p;
+            } catch (Throwable x) {
+                fail(service,
+                     &quot;Provider &quot; + cn + &quot; could not be instantiated&quot;,
+                     x);
+            }
+            throw new Error();          // This cannot happen
+        }
+</code></pre>
+<p>原理解析完了后，基本搞明白了SPI的约定的缘由。</p>
+<p>SPI约定：</p>
+<ul>
+<li>在META-INF/services/目录中创建以Service接口全限定名命名的文件，该文件内容为Service接口具体实现类的全限定名，文件编码必须为UTF-8。 //参考步骤C，之所以UTF-8是因为parse方法中读取文件时写死了编码是utf-8</li>
+<li>使用ServiceLoader.load(Class class); 动态加载Service接口的实现类。//加载流程看上述ABCD步骤解析</li>
+<li>如SPI的实现类为jar，则需要将其放在当前程序的classpath下。//为了能成功读取文件</li>
+<li>Service的具体实现类必须有一个不带参数的构造方法。//因为c.newInstance()</li>
+</ul>
+<h3 id="经典案例JDBC"><a href="#经典案例JDBC" class="headerlink" title="经典案例JDBC"></a>经典案例JDBC</h3><p>说到SPI的运用，大家经常会想到JDBC，下面看看我们常用的JDBC到底是如何运用SPI的(以MySQL作为case进行分析)。</p>
+<p>SPI用到的ServiceLoader类是JDK1.6引入的，而MySQL驱动包实现SPI（添加META/services/java.sql.Driver文件）发生在5.1.16+版本之后。所以我们先看下在JDK1.5版本以及<code>mysql-connector-java-5.1.15.jar</code>是如何实现mysql jdbc驱动的加载过程的。</p>
+<h4 id="旧版jdbc加载（非SPI方式）"><a href="#旧版jdbc加载（非SPI方式）" class="headerlink" title="旧版jdbc加载（非SPI方式）"></a>旧版jdbc加载（非SPI方式）</h4><pre><code class="java">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+</code></pre>
+<p>早期我们使用jdbc的时候都是需要先执行一次Class.forName(“com.mysql.jdbc.Driver”),通过Class.forName加载Class文件会同时执行类的初始化逻辑，执行static静态块里的代码。</p>
+<p>看下com.mysql.jdbc.Driver的代码：</p>
+<pre><code class="java">public class Driver extends NonRegisteringDriver implements java.sql.Driver {
+    //
+    // Register ourselves with the DriverManager
+    //
+    static {
+        try {
+            java.sql.DriverManager.registerDriver(new Driver());
+        } catch (SQLException E) {
+            throw new RuntimeException(&quot;Can&#39;t register driver!&quot;);
+        }
+    }
+
+    /**
+     * Construct a new driver and register it with DriverManager
+     * 
+     * @throws SQLException
+     *             if a database error occurs.
+     */
+    public Driver() throws SQLException {
+        // Required for Class.forName().newInstance()
+    }
+}
+</code></pre>
+<p>执行了DriverManager的registerDriver方法，将当前类的实例化对象作为参数传递进去了。找到jdk1.5的rt.jar包反编译看下之前DriverManager的实现。</p>
+<pre><code class="java">package java.sql;
+
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.security.AccessController;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
+import sun.security.action.GetPropertyAction;
+
+public class DriverManager
+{
+  static final SQLPermission SET_LOG_PERMISSION = new SQLPermission(&quot;setLog&quot;);
+
+  /* Error */
+  public static PrintWriter getLogWriter()
+  {
+    // Byte code:
+    //   0: getstatic 249    java/sql/DriverManager:logSync    Ljava/lang/Object;
+    //   3: dup
+    //   4: astore_0
+    //   5: monitorenter
+    //   6: getstatic 248    java/sql/DriverManager:logWriter    Ljava/io/PrintWriter;
+    //   9: aload_0
+    //   10: monitorexit
+    //   11: areturn
+    //   12: astore_1
+    //   13: aload_0
+    //   14: monitorexit
+    //   15: aload_1
+    //   16: athrow
+    // Line number table:
+    //   Java source line #70    -&gt; byte code offset #0
+    //   Java source line #71    -&gt; byte code offset #6
+    //   Java source line #72    -&gt; byte code offset #12
+    // Local variable table:
+    //   start    length    slot    name    signature
+    //   4    10    0    Ljava/lang/Object;    Object
+    //   12    4    1    localObject1    Object
+    // Exception table:
+    //   from    to    target    type
+    //   6    11    12    finally
+    //   12    15    12    finally
+  }
+
+  public static void setLogWriter(PrintWriter paramPrintWriter)
+  {
+    SecurityManager localSecurityManager = System.getSecurityManager();
+    if (localSecurityManager != null) {
+      localSecurityManager.checkPermission(SET_LOG_PERMISSION);
+    }
+    synchronized (logSync)
+    {
+      logStream = null;
+      logWriter = paramPrintWriter;
+    }
+  }
+
+  public static synchronized Connection getConnection(String paramString, Properties paramProperties)
+    throws SQLException
+  {
+    ClassLoader localClassLoader = getCallerClassLoader();
+
+    return getConnection(paramString, paramProperties, localClassLoader);
+  }
+
+  public static synchronized Connection getConnection(String paramString1, String paramString2, String paramString3)
+    throws SQLException
+  {
+    Properties localProperties = new Properties();
+
+    ClassLoader localClassLoader = getCallerClassLoader();
+    if (paramString2 != null) {
+      localProperties.put(&quot;user&quot;, paramString2);
+    }
+    if (paramString3 != null) {
+      localProperties.put(&quot;password&quot;, paramString3);
+    }
+    return getConnection(paramString1, localProperties, localClassLoader);
+  }
+
+  public static synchronized Connection getConnection(String paramString)
+    throws SQLException
+  {
+    Properties localProperties = new Properties();
+
+    ClassLoader localClassLoader = getCallerClassLoader();
+
+    return getConnection(paramString, localProperties, localClassLoader);
+  }
+
+  public static synchronized Driver getDriver(String paramString)
+    throws SQLException
+  {
+    println(&quot;DriverManager.getDriver(\&quot;&quot; + paramString + &quot;\&quot;)&quot;);
+    if (!initialized) {
+      initialize();
+    }
+    ClassLoader localClassLoader = getCallerClassLoader();
+    for (int i = 0; i &lt; drivers.size(); i++)
+    {
+      DriverInfo localDriverInfo = (DriverInfo)drivers.elementAt(i);
+      if (getCallerClass(localClassLoader, localDriverInfo.driverClassName) != localDriverInfo.driverClass) {
+        println(&quot;    skipping: &quot; + localDriverInfo);
+      } else {
+        try
+        {
+          println(&quot;    trying &quot; + localDriverInfo);
+          if (localDriverInfo.driver.acceptsURL(paramString))
+          {
+            println(&quot;getDriver returning &quot; + localDriverInfo);
+            return localDriverInfo.driver;
+          }
+        }
+        catch (SQLException localSQLException) {}
+      }
+    }
+    println(&quot;getDriver: no suitable driver&quot;);
+    throw new SQLException(&quot;No suitable driver&quot;, &quot;08001&quot;);
+  }
+
+  public static synchronized void registerDriver(Driver paramDriver)
+    throws SQLException
+  {
+    if (!initialized) {
+      initialize();
+    }
+    DriverInfo localDriverInfo = new DriverInfo();
+    localDriverInfo.driver = paramDriver;
+    localDriverInfo.driverClass = paramDriver.getClass();
+    localDriverInfo.driverClassName = localDriverInfo.driverClass.getName();
+    drivers.addElement(localDriverInfo);
+    println(&quot;registerDriver: &quot; + localDriverInfo);
+  }
+
+  public static synchronized void deregisterDriver(Driver paramDriver)
+    throws SQLException
+  {
+    ClassLoader localClassLoader = getCallerClassLoader();
+    println(&quot;DriverManager.deregisterDriver: &quot; + paramDriver);
+
+    DriverInfo localDriverInfo = null;
+    for (int i = 0; i &lt; drivers.size(); i++)
+    {
+      localDriverInfo = (DriverInfo)drivers.elementAt(i);
+      if (localDriverInfo.driver == paramDriver) {
+        break;
+      }
+    }
+    if (i &gt;= drivers.size())
+    {
+      println(&quot;    couldn&#39;t find driver to unload&quot;);
+      return;
+    }
+    if (getCallerClass(localClassLoader, localDriverInfo.driverClassName) != localDriverInfo.driverClass) {
+      throw new SecurityException();
+    }
+    drivers.removeElementAt(i);
+  }
+
+  public static synchronized Enumeration&lt;Driver&gt; getDrivers()
+  {
+    Vector localVector = new Vector();
+    if (!initialized) {
+      initialize();
+    }
+    ClassLoader localClassLoader = getCallerClassLoader();
+    for (int i = 0; i &lt; drivers.size(); i++)
+    {
+      DriverInfo localDriverInfo = (DriverInfo)drivers.elementAt(i);
+      if (getCallerClass(localClassLoader, localDriverInfo.driverClassName) != localDriverInfo.driverClass) {
+        println(&quot;    skipping: &quot; + localDriverInfo);
+      } else {
+        localVector.addElement(localDriverInfo.driver);
+      }
+    }
+    return localVector.elements();
+  }
+
+  public static void setLoginTimeout(int paramInt)
+  {
+    loginTimeout = paramInt;
+  }
+
+  public static int getLoginTimeout()
+  {
+    return loginTimeout;
+  }
+
+  @Deprecated
+  public static synchronized void setLogStream(PrintStream paramPrintStream)
+  {
+    SecurityManager localSecurityManager = System.getSecurityManager();
+    if (localSecurityManager != null) {
+      localSecurityManager.checkPermission(SET_LOG_PERMISSION);
+    }
+    logStream = paramPrintStream;
+    if (paramPrintStream != null) {
+      logWriter = new PrintWriter(paramPrintStream);
+    } else {
+      logWriter = null;
+    }
+  }
+
+  @Deprecated
+  public static PrintStream getLogStream()
+  {
+    return logStream;
+  }
+
+  public static void println(String paramString)
+  {
+    synchronized (logSync)
+    {
+      if (logWriter != null)
+      {
+        logWriter.println(paramString);
+
+        logWriter.flush();
+      }
+    }
+  }
+
+  private static Class getCallerClass(ClassLoader paramClassLoader, String paramString)
+  {
+    Class localClass = null;
+    try
+    {
+      localClass = Class.forName(paramString, true, paramClassLoader);
+    }
+    catch (Exception localException)
+    {
+      localClass = null;
+    }
+    return localClass;
+  }
+
+  private static void loadInitialDrivers()
+  {
+    String str1;
+    try
+    {
+      str1 = (String)AccessController.doPrivileged(new GetPropertyAction(&quot;jdbc.drivers&quot;));
+    }
+    catch (Exception localException1)
+    {
+      str1 = null;
+    }
+    println(&quot;DriverManager.initialize: jdbc.drivers = &quot; + str1);
+    if (str1 == null) {
+      return;
+    }
+    while (str1.length() != 0)
+    {
+      int i = str1.indexOf(&#39;:&#39;);
+      String str2;
+      if (i &lt; 0)
+      {
+        str2 = str1;
+        str1 = &quot;&quot;;
+      }
+      else
+      {
+        str2 = str1.substring(0, i);
+        str1 = str1.substring(i + 1);
+      }
+      if (str2.length() != 0) {
+        try
+        {
+          println(&quot;DriverManager.Initialize: loading &quot; + str2);
+          Class.forName(str2, true, ClassLoader.getSystemClassLoader());
+        }
+        catch (Exception localException2)
+        {
+          println(&quot;DriverManager.Initialize: load failed: &quot; + localException2);
+        }
+      }
+    }
+  }
+
+  private static synchronized Connection getConnection(String paramString, Properties paramProperties, ClassLoader paramClassLoader)
+    throws SQLException
+  {
+    if (paramClassLoader == null) {
+      paramClassLoader = Thread.currentThread().getContextClassLoader();
+    }
+    if (paramString == null) {
+      throw new SQLException(&quot;The url cannot be null&quot;, &quot;08001&quot;);
+    }
+    println(&quot;DriverManager.getConnection(\&quot;&quot; + paramString + &quot;\&quot;)&quot;);
+    if (!initialized) {
+      initialize();
+    }
+    Object localObject = null;
+    for (int i = 0; i &lt; drivers.size(); i++)
+    {
+      DriverInfo localDriverInfo = (DriverInfo)drivers.elementAt(i);
+      if (getCallerClass(paramClassLoader, localDriverInfo.driverClassName) != localDriverInfo.driverClass) {
+        println(&quot;    skipping: &quot; + localDriverInfo);
+      } else {
+        try
+        {
+          println(&quot;    trying &quot; + localDriverInfo);
+          Connection localConnection = localDriverInfo.driver.connect(paramString, paramProperties);
+          if (localConnection != null)
+          {
+            println(&quot;getConnection returning &quot; + localDriverInfo);
+            return localConnection;
+          }
+        }
+        catch (SQLException localSQLException)
+        {
+          if (localObject == null) {
+            localObject = localSQLException;
+          }
+        }
+      }
+    }
+    if (localObject != null)
+    {
+      println(&quot;getConnection failed: &quot; + localObject);
+      throw ((Throwable)localObject);
+    }
+    println(&quot;getConnection: no suitable driver&quot;);
+    throw new SQLException(&quot;No suitable driver&quot;, &quot;08001&quot;);
+  }
+
+  static void initialize()
+  {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+    loadInitialDrivers();
+    println(&quot;JDBC DriverManager initialized&quot;);
+  }
+
+  private static Vector drivers = new Vector();
+  private static int loginTimeout = 0;
+  private static PrintWriter logWriter = null;
+  private static PrintStream logStream = null;
+  private static boolean initialized = false;
+  private static Object logSync = new Object();
+
+  private static native ClassLoader getCallerClassLoader();
+}
+
+</code></pre>
+<p>registerDriver方法通过传进来的Driver实力对象构建了个一个DriverInfo 实体bean，存入了drivers集合。</p>
+<p>接着看DriverManager的获取jdbc连接方法getConnection(String url, String username, String password)</p>
+<pre><code class="java">  public static synchronized Connection getConnection(String paramString1, String paramString2, String paramString3)
+    throws SQLException
+  {
+    Properties localProperties = new Properties();
+
+    ClassLoader localClassLoader = getCallerClassLoader();
+    if (paramString2 != null) {
+      localProperties.put(&quot;user&quot;, paramString2);
+    }
+    if (paramString3 != null) {
+      localProperties.put(&quot;password&quot;, paramString3);
+    }
+    return getConnection(paramString1, localProperties, localClassLoader);
+  }
+
+  private static native ClassLoader getCallerClassLoader();
+</code></pre>
+<p>方法内部通过getCallerClassLoader()本地方法获取当前Class.forName()调用者的类加载。然后遍历之前添加过DriverInfo实体bean的drivers集合（jdbc的实现可能有多种，如果oracle也调用registerDriver方法进行注册，那么drivers集合会存在多个jdbc的实现,这时会通过遍历drivers集合，依次获取连接，如果获取的连接不为空则直接返回，否则返回null接着遍历（一般各个实现包都有根据<code>jdbc:mysql://</code>这种前缀做check，不匹配直接返回null）。</p>
+<pre><code class="java">private static Class getCallerClass(ClassLoader paramClassLoader, String paramString)
+  {
+    Class localClass = null;
+    try
+    {
+      localClass = Class.forName(paramString, true, paramClassLoader);
+    }
+    catch (Exception localException)
+    {
+      localClass = null;
+    }
+    return localClass;
+  }
+</code></pre>
+<p>getCallerClass方法就是再加载一次<code>com.mysql.jdbc.Driver</code>,利用当前调用者的ClassLoader，具体用途我也不是很清楚，不过看当前版本的DriverManger里的注释写着：</p>
+<pre><code class="java">// If the caller does not have permission to load the driver then
+// skip it.
+</code></pre>
+<p>翻译就是确保当前获取connection的类加载器有权限使用之前加载jdbc的具体Driver类的ClassLoader加载的类，是一个鉴权判断。</p>
+<h4 id="新版jdbc加载（SPI方式）"><a href="#新版jdbc加载（SPI方式）" class="headerlink" title="新版jdbc加载（SPI方式）"></a>新版jdbc加载（SPI方式）</h4><pre><code class="java">Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+</code></pre>
+<p>不需要显示声明<code>Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</code>,这些SPI已经帮我们做了。直接DriverManager#getConnection会促发DriverManager类初始化，执行static静态块里的代码：</p>
+<pre><code class="java"> /**
+     * Load the initial JDBC drivers by checking the System property
+     * jdbc.properties and then use the {@code ServiceLoader} mechanism
+     */
+static {
+    loadInitialDrivers();
+    println(&quot;JDBC DriverManager initialized&quot;);
+}
+
+
+
+ private static void loadInitialDrivers() {
+        String drivers;
+        try {
+            drivers = AccessController.doPrivileged(new PrivilegedAction&lt;String&gt;() {
+                public String run() {
+                    return System.getProperty(&quot;jdbc.drivers&quot;);
+                }
+            });
+        } catch (Exception ex) {
+            drivers = null;
+        }
+        // If the driver is packaged as a Service Provider, load it.
+        // Get all the drivers through the classloader
+        // exposed as a java.sql.Driver.class service.
+        // ServiceLoader.load() replaces the sun.misc.Providers()
+
+        AccessController.doPrivileged(new PrivilegedAction&lt;Void&gt;() {
+            public Void run() {
+
+                ServiceLoader&lt;Driver&gt; loadedDrivers = ServiceLoader.load(Driver.class);
+                Iterator&lt;Driver&gt; driversIterator = loadedDrivers.iterator();
+
+                /* Load these drivers, so that they can be instantiated.
+                 * It may be the case that the driver class may not be there
+                 * i.e. there may be a packaged driver with the service class
+                 * as implementation of java.sql.Driver but the actual class
+                 * may be missing. In that case a java.util.ServiceConfigurationError
+                 * will be thrown at runtime by the VM trying to locate
+                 * and load the service.
+                 *
+                 * Adding a try catch block to catch those runtime errors
+                 * if driver not available in classpath but it&#39;s
+                 * packaged as service and that service is there in classpath.
+                 */
+                try{
+                    while(driversIterator.hasNext()) {
+                        driversIterator.next();
+                    }
+                } catch(Throwable t) {
+                // Do nothing
+                }
+                return null;
+            }
+        });
+
+        println(&quot;DriverManager.initialize: jdbc.drivers = &quot; + drivers);
+
+        if (drivers == null || drivers.equals(&quot;&quot;)) {
+            return;
+        }
+        String[] driversList = drivers.split(&quot;:&quot;);
+        println(&quot;number of Drivers:&quot; + driversList.length);
+        for (String aDriver : driversList) {
+            try {
+                println(&quot;DriverManager.Initialize: loading &quot; + aDriver);
+                Class.forName(aDriver, true,
+                        ClassLoader.getSystemClassLoader());
+            } catch (Exception ex) {
+                println(&quot;DriverManager.Initialize: load failed: &quot; + ex);
+            }
+        }
+    }
+</code></pre>
+<p>里面用到了之前讲的ServiceLoader，会读取ClassPath目录中的jar包，解析里面的META-INF/services/java.sql.Driver文件，然后利用Class.forName实例化具体Driver的实现类，在实现类中，会将自己的实现类通过<code>java.sql.DriverManager.registerDriver()</code>方法注册到DriverManger里，一个registeredDrivers变量。</p>
+<pre><code class="java">// List of registered JDBC drivers
+private final static CopyOnWriteArrayList&lt;DriverInfo&gt; registeredDrivers = new CopyOnWriteArrayList&lt;&gt;();
+</code></pre>
+<p>后面获取连接的逻辑跟旧版一样，还是依次遍历registeredDrivers集合，找到匹配的connection。</p>
+<blockquote>
+<p>第一次码这么多字，继续加油～</p>
+</blockquote>
+<p>参考：</p>
+<p><a href="http://hllvm.group.iteye.com/group/topic/38709" target="_blank" rel="noopener">关于Thread.currentThread().getContextClassLoader()</a></p>
+<p><a href="https://www.cnblogs.com/gaojing/archive/2012/03/15/2413638.html" target="_blank" rel="noopener">关于Class.forName(“com.mysql.jdbc.Driver”)</a></p>
+<p><a href="https://stackoverflow.com/questions/13310592/why-java-sql-drivermanager-getcallerclassloader-is-native" target="_blank" rel="noopener">Why java.sql.DriverManager.getCallerClassLoader() is native?</a></p>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" href="/2018/05/10/记一次curl的坑/">
+        记一次curl的坑 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ClassLoader"><span class="toc-text">ClassLoader</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#class文件详解"><span class="toc-text">class文件详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类加载过程"><span class="toc-text">类加载过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要谈下加载"><span class="toc-text">主要谈下加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI"><span class="toc-text">SPI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用实例"><span class="toc-text">应用实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#经典案例JDBC"><span class="toc-text">经典案例JDBC</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#旧版jdbc加载（非SPI方式）"><span class="toc-text">旧版jdbc加载（非SPI方式）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#新版jdbc加载（SPI方式）"><span class="toc-text">新版jdbc加载（SPI方式）</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+    <header class="read-next-card-header">
+      <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
+      <h3 class="read-next-card-header-title">最新文章</h3>
+    </header>
+    <div class="read-next-divider">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+        </svg>
+    </div>
+    <div class="read-next-card-content">
+      <ul>
+        
+        
+        
+        <li>
+          <a href="/2018/05/18/ClassLoader原理以及SPI/">ClassLoader原理以及SPI使用</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="/2018/05/10/记一次curl的坑/">记一次curl的坑</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="/2018/04/27/java注解概念及运用/">java注解概念及运用</a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+    </div>
+    <footer class="read-next-card-footer">
+      <a href="/archives">  MORE  → </a>
+    </footer>
+  </article>
+
+            
+            
+            
+
+<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+    <header class="read-next-card-header" style="padding-bottom: 20px">
+        <h3 class="read-next-card-header-title">分类</h3>
+    </header>
+    <div class="read-next-card-content">
+        <ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">others</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a></li></ul>
+        </ul>
+    </div>
+</article>
+
+
+            
+            
+            
+
+<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+	<header class="read-next-card-header" style="padding-bottom: 20px">
+		<h3 class="read-next-card-header-title">标签云</h3>
+	</header>
+	<div class="read-next-card-content-ext">
+		<a href="/tags/ClassLoader/" style="font-size: 14px;">ClassLoader</a> <a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/annotation/" style="font-size: 14px;">annotation</a> <a href="/tags/curl/" style="font-size: 14px;">curl</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/spi/" style="font-size: 14px;">spi</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
+	</div>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/">linxiaobai's blog</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+			<a href="//hexo.io/">Powered by Hexo</a>
+			<a href="https://github.com/xzhih/hexo-theme-casper">Casper</a>
+		</nav>
+	</div>
+</footer>
+
+
+<div class="floating-header" >
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+	$(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+        window.addEventListener('scroll', onScroll, {passive: true});
+        window.addEventListener('resize', onResize, false);
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+    </div>
+</body>
+</html>
