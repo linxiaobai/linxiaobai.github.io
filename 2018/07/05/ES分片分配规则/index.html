@@ -111,12 +111,14 @@
         </header>
         <article class="post-full ">
             
-            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/EtaAquarids_ZH-CN10323549621_1920x1080.jpg)">
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/HONKONG_ZH-CN11971924406_1920x1080.jpg)">
             </figure>
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <p>按照官方文档翻译总结并实践：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html</a></p>
+                    <blockquote>
+<p>按照<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html" target="_blank" rel="noopener">官方文档</a>翻译总结并实践</p>
+</blockquote>
 <h1 id="分片策略"><a href="#分片策略" class="headerlink" title="分片策略"></a>分片策略</h1><h2 id="cluster级别分片分配"><a href="#cluster级别分片分配" class="headerlink" title="cluster级别分片分配"></a>cluster级别分片分配</h2><h3 id="分片配置"><a href="#分片配置" class="headerlink" title="分片配置"></a>分片配置</h3><p><code>cluster.routing.allocation.enable</code></p>
 <p>启用或禁用特定种类的分片的分配：</p>
 <ul>
@@ -134,6 +136,7 @@ curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;tra
 <li>值设置成new_primaries, 新增的索引的主分片会均分到集群的各个node，副本分片处于unassigined状态，之前创建的索引分片策略不受影响。</li>
 <li>值设置成none时，新增的任何索引对应的分片会全部处于unassigined状态。</li>
 </ol>
+<p><br><br><br><br><br></p>
 <h3 id="分片重新均衡分配"><a href="#分片重新均衡分配" class="headerlink" title="分片重新均衡分配"></a>分片重新均衡分配</h3><p><code>cluster.routing.rebalance.enable</code></p>
 <p>为特定类型的分片启用或禁用重新平衡：</p>
 <ul>
@@ -155,7 +158,7 @@ curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;tra
 <blockquote>
 <p>默认值是<code>indices_all_active</code>,意味着需要等到所有的分片均处于可用状态时，才会进行重新平衡分配操作，可以减少集群初始启动时机器之间的交互。</p>
 </blockquote>
-<p><strong>TIPS:</strong>为了避免机器重启导致频繁的再平衡分配操作，可以设置<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_delaying_shard_allocation.html" target="_blank" rel="noopener">推迟分片分配</a>的时间。</p>
+<p><br><br><br><br><br><br><strong>TIPS:</strong>为了避免机器重启导致频繁的再平衡分配操作，可以设置<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_delaying_shard_allocation.html" target="_blank" rel="noopener">推迟分片分配</a>的时间。</p>
 <pre><code>PUT /_all/_settings 
 {
   &quot;settings&quot;: {
@@ -176,6 +179,7 @@ curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;tra
 </ul>
 <p>需要注意的是：</p>
 <p><strong>无论平衡算法如何配置，如果配置了强制感知或分配过滤，可能平衡分配将不被允许重新平衡。</strong></p>
+<p><br><br><br><br><br></p>
 <h2 id="基于磁盘的分片分配策略"><a href="#基于磁盘的分片分配策略" class="headerlink" title="基于磁盘的分片分配策略"></a>基于磁盘的分片分配策略</h2><p>在确定是将新分片分配给该节点还是主动从该节点重新将分片分配出去之前，Elasticsearch会考虑节点的可用此盘空间。</p>
 <p>以下是可以在<code>elasticsearch.yml</code>配置文件中配置的设置，或使用<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html" target="_blank" rel="noopener">cluster-update-settings</a> API 在活动群集上动态 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html" target="_blank" rel="noopener">更新的设置</a>：</p>
 <ul>
@@ -204,8 +208,10 @@ curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;tra
 <p>Elasticsearch应该多久检查一次集群中每个节点的磁盘使用情况。默认为<code>30s</code>。</p>
 <p><code>cluster.routing.allocation.disk.include_relocations</code></p>
 <p>默认为<code>true</code>，这意味着Elasticsearch将在计算节点的磁盘使用情况时考虑当前正在重定位到目标节点的分片。但是，将重新定位分片的大小考虑在内可能意味着节点的磁盘使用量偏差估计偏高，因为重定位可能完成90％，最近检索的磁盘使用量将包括重定位分片的总大小以及正在运行的重定位已经使用的空间。</p>
+<p><br></p>
 <h2 id="分片感知分配"><a href="#分片感知分配" class="headerlink" title="分片感知分配"></a>分片感知分配</h2><p>在同一物理服务器，多个机架或多个区域或域中的多个VM上运行节点时，同一物理服务器上，同一机架中或同一区域或域中的两个节点更可能会同时崩溃，而不是两个不相关的节点同时崩溃。</p>
 <p>如果Elasticsearch 能了解硬件的物理配置，则可以确保主分片及其副本分片分布在不同的物理服务器，机架或区域中，以最大程度地降低同时丢失所有分片副本的风险。值得高兴的是我们可以通过分片识别设置告诉Elasticsearch对应的硬件配置。</p>
+<p><br></p>
 <h4 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h4><p>在<code>elasticsearch.yml</code>配置文件中可用给各个节点配置属性值（可以配置多个,前缀叫node），例如配置2个属性，一个rack_id,一个zone_id，属性名称可用任意取。（跟自带的一些配置名称不一样应该都可以，就是不要叫node.name这种）我们这里用rack_id表示机架，zone_id表示机房。</p>
 <pre><code class="yaml">node.rack_id: r1
 node.zone_id: z1
@@ -218,11 +224,13 @@ node.name: node3  -&gt; node.rack_id: r2
 <p>配置前，所有分片均分在各个节点。</p>
 <p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172217547.png" alt="image-20180705172217547"></p>
 <p>这种配置就存在前面说的问题，node1跟node2可以看成一个机架上的2个实例（单机架2台机器上的2个ES实例，后者单机架单机器上2个ES实例），如果机架断电了，索引中分片3上面的数据就丢了，访问不了。</p>
+<p><br></p>
 <p>当配置<code>cluster.routing.allocation.awareness.attributes: rack_id</code>后，配置方式如下：</p>
 <pre><code class="shell">curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;transient&quot;:{&quot;cluster.routing.allocation.awareness.attributes&quot; : &quot;rack_id&quot;}}&#39;
 </code></pre>
 <p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172654035.png" alt="image-20180705172654035"></p>
 <p>node3的rack_id值为r2，node1跟node2都是r1，所以最终实现了主副本分片未落到一个r1中。</p>
+<p><br><br><br><br><br></p>
 <h2 id="强制感知分配"><a href="#强制感知分配" class="headerlink" title="强制感知分配"></a>强制感知分配</h2><p>上面的分片感知又可以称为普通感知，普通感知存在一个问题，就是如果存在4个节点n1,n2,n3,n4，配置对应的rack_id属性如下：</p>
 <pre><code class="yaml">node.name: node1  -&gt; node.rack_id: r1
 node.name: node2  -&gt; node.rack_id: r1
@@ -240,6 +248,7 @@ node.name: node4  -&gt; node.rack_id: r2
 <h6 id="4个节点均正常"><a href="#4个节点均正常" class="headerlink" title="4个节点均正常"></a>4个节点均正常</h6><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203818647.png" alt="image-20180705203818647"></p>
 <h5 id="node3-node4挂了"><a href="#node3-node4挂了" class="headerlink" title="node3,node4挂了"></a>node3,node4挂了</h5><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203923037.png" alt="image-20180705203923037"></p>
 <p>可以看到有5个副本分片始终处于unassigned状态了。</p>
+<p><br><br><br><br><br></p>
 <h2 id="过滤器分配"><a href="#过滤器分配" class="headerlink" title="过滤器分配"></a>过滤器分配</h2><p>不同于<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-allocation.html" target="_blank" rel="noopener"><em>索引分片分配</em></a>提供了针对<strong>每个索引</strong>设置来控制分片到节点的分配，群集级分片分配过滤允许您允许或禁止从<strong>任何</strong>索引到特定节点的分片分配。</p>
 <p>可用的<em>动态</em>集群设置如下，其中<code>{attribute}</code> 引用任意节点属性：</p>
 <ul>
