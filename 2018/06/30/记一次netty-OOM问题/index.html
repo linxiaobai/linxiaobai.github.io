@@ -142,6 +142,8 @@ io.netty.util.internal.OutOfDirectMemoryError: failed to allocate 16777216 byte(
     at java.lang.Thread.run(Thread.java:745)
 </code></pre>
 <p>看异常信息可以看到堆外内存共256M，已经使用240M，加上继续分配16M已经达到了最大值。</p>
+<p><br></p>
+<p><br></p>
 <p>通过上诉异常栈，进行一些简单的分析：</p>
 <p><strong>分析1:</strong>查看异常对应的代码(PlatformDependent.java)可以发现，堆内存的最大限制是读取的JVM参数-XX:MaxDirectMemorySize，然后赋值给常量DIRECT_MEMORY_LIMIT</p>
 <pre><code class="java">private static void incrementMemoryCounter(int capacity) {
@@ -161,8 +163,13 @@ io.netty.util.internal.OutOfDirectMemoryError: failed to allocate 16777216 byte(
 }
 </code></pre>
 <p>看了下自己jvm启动参数XX:MaxDirectMemorySize确实配置的是256M。</p>
+<p><br></p>
+<p><br></p>
 <p><strong>分析2</strong></p>
 <p>异常栈里显示的PoolArena是netty中的内存池的实现类。为了集中管理内存的分配和释放，提高分配释放内存的性能，netty预先分配一个大块的内存空间来实现一个内存池，使用时会拆分成各个小块的进行分配使用。所以猜测是内存池中对象被分配使用后未进行回收，导致不断新增对象直到到达JVM限制的临界值。</p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
 <p>光有这2点信息，不太好排查出问题具体出在哪里。于是我开始用google检索相关信息，最后找到了netty官方关于ByteBuf对象引用计数的讲解：<a href="http://netty.io/wiki/reference-counted-objects.html" target="_blank" rel="noopener">http://netty.io/wiki/reference-counted-objects.html</a> </p>
 <p>文章里说明了如果引用计数使用不当，会导致Memory Leak，并给了内存泄露原因的排查方式。然后我试着在log中grep关键词LEAK发现了有一条error（由于最上面的那个异常栈信息刷的太多，导致我开始没注意到该ERROR log）。</p>
 <pre><code class="java">2018-06-25 17:39:56.616 ERROR 18059 --- [-] [ntLoopGroup-5-1] io.netty.util.ResourceLeakDetector       : LEAK: ByteBuf.release() was not called before it&#39;s garbage-collected. Enable advanced leak reporting to find out where the leak occurred. To enable advanced leak reporting, specify the JVM option &#39;-Dio.netty.leakDetection.level=advanced&#39; or call ResourceLeakDetector.setLevel() See http://netty.io/wiki/reference-counted-objects.html for more information.
@@ -176,7 +183,10 @@ ADVANCED - tells where the leaked buffer was accessed for 1% of buffers.
 PARANOID - Same with ADVANCED except that it&#39;s for every single buffer. Useful for automated testing phase. You could fail the build if the build output contains &#39;LEAK:&#39;.
 </code></pre>
 <p>我在jvm参数里加上<code>-Dio.netty.leakDetection.level=advanced</code>后开始重现bug，为了尽快重现bug，我将jvm直接内存限制调小到26m（-XX:MaxDirectMemorySize=26m）</p>
-<p>很快就重现bug，再次得到异常信息如下，这时后详细多了，不过又出现一个提示我们1条leak record被丢弃了，因为限制leak record为4，可以修改io.netty.leakDetection.maxRecords参数来进行配置。</p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p>很快bug重现了，再次得到异常信息如下，这时后详细多了，不过又出现一个提示我们1条leak record被丢弃了，因为限制leak record为4，可以修改io.netty.leakDetection.maxRecords参数来进行配置。</p>
 <pre><code class="java">2018-06-25 16:09:34.647 ERROR 16469 --- [-] [ntLoopGroup-5-4] io.netty.util.ResourceLeakDetector       : LEAK: ByteBuf.release() was not called before it&#39;s garbage-collected. See http://netty.io/wiki/reference-counted-objects.html for more information.
 WARNING: 1 leak records were discarded because the leak record count is limited to 4. Use system property io.netty.leakDetection.maxRecords to increase the limit.
 Recent access records: 4
@@ -408,6 +418,10 @@ Created at:
 }
 </code></pre>
 <p>然后再重新进行压测，未出现OOM问题，bug得以解决。</p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
 <h3 id="那么问题来了，为啥引用计数不-1会导致OOM呢？"><a href="#那么问题来了，为啥引用计数不-1会导致OOM呢？" class="headerlink" title="那么问题来了，为啥引用计数不-1会导致OOM呢？"></a>那么问题来了，为啥引用计数不-1会导致OOM呢？</h3><p>我DEBUG看了下channelRead方法读进来的Object msg类型是<code>PooledUnsafeDirectByteBuf</code>，看了下释放内存的方法为其父类<code>PooledByteBuf</code>中的deallocate()方法。</p>
 <pre><code class="java">  @Override
     protected final void deallocate() {
@@ -525,6 +539,12 @@ private boolean release0(int decrement) {
         
         
         <li>
+          <a href="/2018/07/05/ES分片分配规则/">ES分片分配规则</a>
+        </li>
+        
+        
+        
+        <li>
           <a href="/2018/07/01/将bing图片作为mac壁纸/">将bing图片作为mac壁纸</a>
         </li>
         
@@ -535,10 +555,6 @@ private boolean release0(int decrement) {
         </li>
         
         
-        
-        <li>
-          <a href="/2018/05/18/ClassLoader原理以及SPI/">ClassLoader原理以及SPI使用</a>
-        </li>
         
         
         
@@ -615,7 +631,7 @@ private boolean release0(int decrement) {
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>
 	<div class="read-next-card-content-ext">
-		<a href="/tags/ClassLoader/" style="font-size: 14px;">ClassLoader</a> <a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/annotation/" style="font-size: 14px;">annotation</a> <a href="/tags/curl/" style="font-size: 14px;">curl</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/netty/" style="font-size: 14px;">netty</a> <a href="/tags/oom/" style="font-size: 14px;">oom</a> <a href="/tags/python/" style="font-size: 16.5px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/spi/" style="font-size: 14px;">spi</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
+		<a href="/tags/ClassLoader/" style="font-size: 14px;">ClassLoader</a> <a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/annotation/" style="font-size: 14px;">annotation</a> <a href="/tags/curl/" style="font-size: 14px;">curl</a> <a href="/tags/elasticsearch/" style="font-size: 14px;">elasticsearch</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/netty/" style="font-size: 14px;">netty</a> <a href="/tags/oom/" style="font-size: 14px;">oom</a> <a href="/tags/python/" style="font-size: 16.5px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/spi/" style="font-size: 14px;">spi</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
 	</div>
 </article>
 

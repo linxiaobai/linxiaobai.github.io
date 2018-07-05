@@ -16,7 +16,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>ubuntu下sublime中文解决办法 | linxiaobai's blog</title>
+	<title>ES分片分配规则 | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -99,147 +99,207 @@
     <div class="inner">
         <header class="post-full-header">
             <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2015-01-19T12:13:54.000Z" itemprop="datePublished">
-                    2015-01-19
+                <time  class="post-full-meta-date" datetime="2018-07-05T13:21:24.000Z" itemprop="datePublished">
+                    2018-07-5
                 </time>
                 
                 <span class="date-divider">/</span>
                 
-                <a href="/categories/ubuntu/">ubuntu</a>&nbsp;&nbsp;
-                
                 
             </section>
-            <h1 class="post-full-title">ubuntu下sublime中文解决办法</h1>
+            <h1 class="post-full-title">ES分片分配规则</h1>
         </header>
-        <article class="post-full no-image">
+        <article class="post-full ">
+            
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/EtaAquarids_ZH-CN10323549621_1920x1080.jpg)">
+            </figure>
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <p>我的系统版本<em>ubuntu12.04</em><br>老实说，作为linux刚入门的菜鸟真的经不起折腾，问题总是接连不断的出现也是醉了。</p>
-<p><strong>从头开始记录一下吧</strong></p>
-<h2 id="下载安装配置sublime"><a href="#下载安装配置sublime" class="headerlink" title="下载安装配置sublime"></a>下载安装配置sublime</h2><p><a href="http://www.sublimetext.com/2" target="_blank" rel="noopener">sublime下载地址</a></p>
-<p>下载下来后，发现后缀名不是gz的，tar zvxf解压不了。。网上说用tar vxf可以解压，具体我也没试，直接双击解压了。</p>
-<p>解压后，文件夹名称带空格的，重命名一下，不然会影响到后面的步骤。<br>重命名指令 <code>mv Sublime Text 2 sublimeText2</code></p>
-<p>然后打开文件夹找到一个可执行文件，名称叫sublime_text<br>直接在该文件夹下面输入 <code>./sublime_text Test.java</code> 就可以运行sublime了。<br>为了能在其他地方能够运行sublime，有以下2个方式：</p>
+                    <p>按照官方文档翻译总结并实践：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html</a></p>
+<h1 id="分片策略"><a href="#分片策略" class="headerlink" title="分片策略"></a>分片策略</h1><h2 id="cluster级别分片分配"><a href="#cluster级别分片分配" class="headerlink" title="cluster级别分片分配"></a>cluster级别分片分配</h2><h3 id="分片配置"><a href="#分片配置" class="headerlink" title="分片配置"></a>分片配置</h3><p><code>cluster.routing.allocation.enable</code></p>
+<p>启用或禁用特定种类的分片的分配：</p>
 <ul>
-<li>配置环境变量</li>
-<li>直接创建一个快捷方式到/usr/bin里面</li>
+<li><code>all</code> - （默认）允许为各种分片分配分片。</li>
+<li><code>primaries</code> - 仅允许分配主分片的分片。</li>
+<li><code>new_primaries</code> - 仅允许为新索引的主分片分配分片。</li>
+<li><code>none</code> - 任何索引都不允许任何类型的分片。</li>
 </ul>
-<p>配置环境变量就不说了，我们用第二种吧。</p>
-<blockquote>
-<p>ln -s sublime安装路径/sublime_text /usr/bin/sublime </p>
-</blockquote>
-<p><em>先不用急着配这个，后面是要替换的</em><br>以上做法相当于在/usr/bin下面创建了一个快捷方式,名称叫sublime，这个名称可以随便取。<br>然后再在终端任何地方，直接sublime AA.java就OK了。</p>
-<p><strong>上面说的这种方式弄清楚了，对后面的解决方式就好理解了</strong></p>
-<p>然后问题就来了，发现怎么输入不了中文，怎么切换都切换不了，ubuntu下默认的ibus有问题。<br>网上给出了很多解决办法，有的说直接装fcitx可以解决，于是我就装了，结果确实可以，但是打错一个字删都删不了，必须要打出来才能删。</p>
-<p><strong>坑啊！！于是想着还是装搜狗输入法吧。</strong></p>
-<h2 id="下载安装搜狗输入法"><a href="#下载安装搜狗输入法" class="headerlink" title="下载安装搜狗输入法"></a>下载安装搜狗输入法</h2><p><a href="http://pinyin.sogou.com/linux/" target="_blank" rel="noopener">搜狗输入法下载地址</a><br>点击对于的32位还是64位后会有对应<a href="http://pinyin.sogou.com/linux/help.php" target="_blank" rel="noopener">帮助页面</a><br>照着上面的帮助页面进行操作</p>
-<blockquote>
-<p>上面给的操作有些地方有出入，下面是我的操作</p>
-</blockquote>
+<pre><code class="shell">#临时配置
+curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;transient&quot;:{&quot;cluster.routing.allocation.enable&quot; : &quot;all&quot;}}&#39;
+</code></pre>
 <ol>
-<li>输入alt+F2打开搜索窗口，就是左上方那个Dash</li>
-<li>输入‘更新’，查询更新的那个软件</li>
-<li>点击 ‘设置’&gt;’其他软件’&gt;’添加’&gt;’在弹出的窗口中输入ppa:fcitx-team/nightly‘</li>
-<li>在要更新的软件源里面右键，全部不选，然后找到其他软件那3个，对上面添加的那几个安装上就好了</li>
-<li>后面就是步骤见帮助页面</li>
+<li>值设置成all，索引的主分片跟副本分片会均分到集群的各个node。</li>
+<li>值设置成primaries，索引的主分片会均分到集群的各个node，副本分片处于unassigined状态。</li>
+<li>值设置成new_primaries, 新增的索引的主分片会均分到集群的各个node，副本分片处于unassigined状态，之前创建的索引分片策略不受影响。</li>
+<li>值设置成none时，新增的任何索引对应的分片会全部处于unassigined状态。</li>
 </ol>
-<p><strong>注意！第三，四步不执行的话，后面下载完fcitx后，双击deb包会提示fcitx版本过低的，安装不了搜狗</strong><br>安装完成后立马就遇到一个问题，一切换搜狗输入法，直接一个弹窗<strong>’搜狗面板程序加载失败，请重启以使用输入法！‘</strong>，我们就重启一下就好了。</p>
-<h2 id="给sublime添加中文支持"><a href="#给sublime添加中文支持" class="headerlink" title="给sublime添加中文支持"></a>给sublime添加中文支持</h2><ol>
-<li>新建一个文件sublime_imfix.c，然后将下面这段代码copy进去<pre><code> /*
- sublime-imfix.c
- Use LD_PRELOAD to interpose some function to fix sublime input method support for linux.
- By Cjacker Huang &lt;jianzhong.huang at i-soft.com.cn&gt;
- gcc -shared -o libsublime-imfix.so sublime_imfix.c `pkg-config --libs --cflags gtk+-2.0` -fPIC
- LD_PRELOAD=./libsublime-imfix.so sublime_text
- */
- #include &lt;gtk/gtk.h&gt;
- #include &lt;gdk/gdkx.h&gt;
- typedef GdkSegment GdkRegionBox;
- struct _GdkRegion
- {
- long size;
- long numRects;
- GdkRegionBox *rects;
- GdkRegionBox extents;
- };
- GtkIMContext *local_context;
- void
- gdk_region_get_clipbox (const GdkRegion *region,
- GdkRectangle *rectangle)
- {
- g_return_if_fail (region != NULL);
- g_return_if_fail (rectangle != NULL);
- rectangle-&gt;x = region-&gt;extents.x1;
- rectangle-&gt;y = region-&gt;extents.y1;
- rectangle-&gt;width = region-&gt;extents.x2 - region-&gt;extents.x1;
- rectangle-&gt;height = region-&gt;extents.y2 - region-&gt;extents.y1;
- GdkRectangle rect;
- rect.x = rectangle-&gt;x;
- rect.y = rectangle-&gt;y;
- rect.width = 0;
- rect.height = rectangle-&gt;height; 
- //The caret width is 2; 
- //Maybe sometimes we will make a mistake, but for most of the time, it should be the caret.
- if(rectangle-&gt;width == 2 &amp;&amp; GTK_IS_IM_CONTEXT(local_context)) {
- gtk_im_context_set_cursor_location(local_context, rectangle);
- }
- }
- //this is needed, for example, if you input something in file dialog and return back the edit area
- //context will lost, so here we set it again.
- static GdkFilterReturn event_filter (GdkXEvent *xevent, GdkEvent *event, gpointer im_context)
- {
- XEvent *xev = (XEvent *)xevent;
- if(xev-&gt;type == KeyRelease &amp;&amp; GTK_IS_IM_CONTEXT(im_context)) {
- GdkWindow * win = g_object_get_data(G_OBJECT(im_context),&quot;window&quot;);
- if(GDK_IS_WINDOW(win))
- gtk_im_context_set_client_window(im_context, win);
- }
- return GDK_FILTER_CONTINUE;
- }
- void gtk_im_context_set_client_window (GtkIMContext *context,
- GdkWindow *window)
- {
- GtkIMContextClass *klass;
- g_return_if_fail (GTK_IS_IM_CONTEXT (context));
- klass = GTK_IM_CONTEXT_GET_CLASS (context);
- if (klass-&gt;set_client_window)
- klass-&gt;set_client_window (context, window);
- if(!GDK_IS_WINDOW (window))
- return;
- g_object_set_data(G_OBJECT(context),&quot;window&quot;,window);
- int width = gdk_window_get_width(window);
- int height = gdk_window_get_height(window);
- if(width != 0 &amp;&amp; height !=0) {
- gtk_im_context_focus_in(context);
- local_context = context;
- }
- gdk_window_add_filter (window, event_filter, context); 
- }
-</code></pre></li>
-<li><p>在终端输入下面指令编译上面的代码</p>
-<pre><code> gcc -shared -o libsublime-imfix.so sublime_imfix.c `pkg-config --libs --cflags gtk+-2.0` -fPIC
-</code></pre><p><strong>我在第二部这里又出了一个问题</strong></p>
-<blockquote>
-<p><code>No package ‘gtk+-2.0’ found （PKG_CONFIG_PATH问题）</code><br>然后我去/usr/bin里面查看了一下，我确实没有gtk，<br>于是我百度了一下安装指令 <code>apt-get install libgtk2.0-dev</code><br>然后运行安装指令进行gtk的安装</p>
-</blockquote>
-</li>
-<li><p>在终端输入<code>LD_PRELOAD=./libsublime-imfix.so sublime</code>运行</p>
-</li>
-</ol>
-<p>上面操作后发现，确实可以输入中文了，可是我得正常编辑，总不能每次都用LD_PRELOAD然后一大串地址吧。</p>
-<p>于是我考虑到可以通过写一个sh脚本，然后把它用最开始的快捷方式链接的方式去实现直接输入sublime XX.java就能输入中文。</p>
+<h3 id="分片重新均衡分配"><a href="#分片重新均衡分配" class="headerlink" title="分片重新均衡分配"></a>分片重新均衡分配</h3><p><code>cluster.routing.rebalance.enable</code></p>
+<p>为特定类型的分片启用或禁用重新平衡：</p>
 <ul>
-<li>编写简单的shell ，取名custome_sublime<pre><code>  #!/bin/bash
-  LD_PRELOAD=/home/linuxv/software/sublimeText2/libsublime-imfix.so /home/linuxv/software/sublimeText2/sublime_text &quot;$1&quot;
-</code></pre><strong>大家注意好上面的地址替换成你自己的安装地址</strong><br>上面的”$1”是用来代表命令执行的时候后面跟的第一个参数，主要用来代替使用sublime时后面跟的文件命 ‘T.java，B.java’等<br>一开始没想到用”$1”参数，结果每次启动都是一个新的框，根本编辑不了某一个文件。</li>
-<li><p>将编写的sh脚本变成可执行文件 <code>chmod +x custome_sublime</code></p>
+<li><code>all</code> - （默认）允许各种分片的分片平衡。</li>
+<li><code>primaries</code> - 仅允许主分片的分片平衡。</li>
+<li><code>replicas</code> - 仅允许对副本分片进行分片平衡。</li>
+<li><code>none</code> - 任何指数都不允许任何类型的碎片平衡。</li>
+</ul>
+<blockquote>
+<p>该参数主要含义是，当我们在cluster中新增node时，新增加的node是否均衡索引的分片。比如10个分片，5主5备，当前集群2个节点已经均分了，当新增加第三个节点时，如<code>cluster.routing.rebalance.enable</code>设置的是node，那么新增的节点不会被分配到分片。</p>
+</blockquote>
+<p><code>cluster.routing.allocation.allow_rebalance</code></p>
+<p>指定何时允许分片重新平衡：</p>
+<ul>
+<li><code>always</code> - 始终允许重新平衡。</li>
+<li><code>indices_primaries_active</code> - 仅在群集中的所有主分片分配完成后。</li>
+<li><code>indices_all_active</code> - （默认）仅当分配了群集中的所有分片（主和副本）分配完成后。</li>
+</ul>
+<blockquote>
+<p>默认值是<code>indices_all_active</code>,意味着需要等到所有的分片均处于可用状态时，才会进行重新平衡分配操作，可以减少集群初始启动时机器之间的交互。</p>
+</blockquote>
+<p><strong>TIPS:</strong>为了避免机器重启导致频繁的再平衡分配操作，可以设置<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_delaying_shard_allocation.html" target="_blank" rel="noopener">推迟分片分配</a>的时间。</p>
+<pre><code>PUT /_all/_settings 
+{
+  &quot;settings&quot;: {
+    &quot;index.unassigned.node_left.delayed_timeout&quot;: &quot;5m&quot; 
+  }
+}
+</code></pre><h3 id="简化式分片均衡分配"><a href="#简化式分片均衡分配" class="headerlink" title="简化式分片均衡分配"></a>简化式分片均衡分配</h3><p>以下设置一起用于确定每个分片的放置位置。当没有允许的重新平衡操作可以使任何节点的权重更接近任何其他节点的权重时，群集是平衡的<code>balance.threshold</code>。</p>
+<ul>
+<li><p><code>cluster.routing.allocation.balance.shard</code></p>
+<p>定义节点（float）上分配的分片总数的权重因子。默认为<code>0.45f</code>。提高这一点会增加均衡群集中所有节点的分片数量的趋势。</p>
 </li>
-<li><p>然后将该可执行文件ln到/usr/bin里面 <code>ln -s sublime安装路径/custome_sublime /usr/bin/sublime</code></p>
+<li><p><code>cluster.routing.allocation.balance.index</code></p>
+<p>定义在特定节点（float）上分配的每个索引的分片数量的权重因子。默认为<code>0.55f</code>。提高这一点会增加在集群中所有节点上均衡每个索引的分片数的趋势。</p>
+</li>
+<li><p><code>cluster.routing.allocation.balance.threshold</code></p>
+<p>应执行的操作的最小优化值（非负浮点数）。默认为<code>1.0f</code>。提高此选项将导致群集在优化分片平衡方面不那么积极。</p>
 </li>
 </ul>
-<p><em>OK,搞定了～</em><br>附上我文件的显示图供大家参考：</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/2015-01-19 19:31:29的屏幕截图.png" alt="目录图片"></p>
+<p>需要注意的是：</p>
+<p><strong>无论平衡算法如何配置，如果配置了强制感知或分配过滤，可能平衡分配将不被允许重新平衡。</strong></p>
+<h2 id="基于磁盘的分片分配策略"><a href="#基于磁盘的分片分配策略" class="headerlink" title="基于磁盘的分片分配策略"></a>基于磁盘的分片分配策略</h2><p>在确定是将新分片分配给该节点还是主动从该节点重新将分片分配出去之前，Elasticsearch会考虑节点的可用此盘空间。</p>
+<p>以下是可以在<code>elasticsearch.yml</code>配置文件中配置的设置，或使用<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html" target="_blank" rel="noopener">cluster-update-settings</a> API 在活动群集上动态 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html" target="_blank" rel="noopener">更新的设置</a>：</p>
+<ul>
+<li><p><code>cluster.routing.allocation.disk.threshold_enabled</code></p>
+<p>默认为<code>true</code>。设置为<code>false</code>禁用磁盘分配决定器。</p>
+</li>
+<li><p><code>cluster.routing.allocation.disk.watermark.low</code></p>
+<p>控制磁盘使用的低水位线。默认为<code>85%</code>，意味着Elasticsearch不会将分片分配给使用磁盘超过85％的节点。它也可以设置为绝对字节值（如<code>500mb</code>），以防止Elasticsearch在小于指定的可用空间量时分配分片。此设置不会影响新创建的索引的主分片，或者特别是之前从未分配过的任何分片。</p>
+</li>
+<li><p><code>cluster.routing.allocation.disk.watermark.high</code></p>
+<p>控制高水印。它默认为<code>90%</code>，意味着Elasticsearch将尝试从磁盘使用率超过90％的节点重新定位分片。它也可以设置为绝对字节值（类似于低水印），以便在节点小于指定的可用空间量时将其从节点重新定位。此设置会影响所有分片的分配，无论先前是否分配。</p>
+</li>
+<li><p><code>cluster.routing.allocation.disk.watermark.flood_stage</code></p>
+<p>控制磁盘的最大容量，它默认为95％，当节点磁盘容量到达95%时，索引会被置为只读模式，不允许继续写数据。这是防止节点耗尽磁盘空间的最后手段，可用在释放完磁盘空间后，通过下面指令解除read-only模式：</p>
+<pre><code class="java">PUT _settings
+{
+  &quot;index.blocks.read_only_allow_delete&quot;: &quot;false&quot;
+}
+</code></pre>
+</li>
+</ul>
+<blockquote>
+<p> 不能在这些设置中混合使用百分比值和字节值。要么全部都设置为百分比值，要么全部都设置为字节值。这样我们就可以验证设置是否内部一致（即，低磁盘阈值不超过高磁盘阈值，并且高磁盘阈值不超过泛洪阶段阈值）。</p>
+</blockquote>
+<p><code>cluster.info.update.interval</code></p>
+<p>Elasticsearch应该多久检查一次集群中每个节点的磁盘使用情况。默认为<code>30s</code>。</p>
+<p><code>cluster.routing.allocation.disk.include_relocations</code></p>
+<p>默认为<code>true</code>，这意味着Elasticsearch将在计算节点的磁盘使用情况时考虑当前正在重定位到目标节点的分片。但是，将重新定位分片的大小考虑在内可能意味着节点的磁盘使用量偏差估计偏高，因为重定位可能完成90％，最近检索的磁盘使用量将包括重定位分片的总大小以及正在运行的重定位已经使用的空间。</p>
+<h2 id="分片感知分配"><a href="#分片感知分配" class="headerlink" title="分片感知分配"></a>分片感知分配</h2><p>在同一物理服务器，多个机架或多个区域或域中的多个VM上运行节点时，同一物理服务器上，同一机架中或同一区域或域中的两个节点更可能会同时崩溃，而不是两个不相关的节点同时崩溃。</p>
+<p>如果Elasticsearch 能了解硬件的物理配置，则可以确保主分片及其副本分片分布在不同的物理服务器，机架或区域中，以最大程度地降低同时丢失所有分片副本的风险。值得高兴的是我们可以通过分片识别设置告诉Elasticsearch对应的硬件配置。</p>
+<h4 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h4><p>在<code>elasticsearch.yml</code>配置文件中可用给各个节点配置属性值（可以配置多个,前缀叫node），例如配置2个属性，一个rack_id,一个zone_id，属性名称可用任意取。（跟自带的一些配置名称不一样应该都可以，就是不要叫node.name这种）我们这里用rack_id表示机架，zone_id表示机房。</p>
+<pre><code class="yaml">node.rack_id: r1
+node.zone_id: z1
+</code></pre>
+<p>依次起3个节点，2个为r1,一个为r2。</p>
+<pre><code>node.name: node1  -&gt; node.rack_id: r1
+node.name: node2  -&gt; node.rack_id: r1
+node.name: node3  -&gt; node.rack_id: r2
+</code></pre><p>通过配置：<code>cluster.routing.allocation.awareness.attributes: rack_id</code>来根据rack_id去分片分配感知。</p>
+<p>配置前，所有分片均分在各个节点。</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172217547.png" alt="image-20180705172217547"></p>
+<p>这种配置就存在前面说的问题，node1跟node2可以看成一个机架上的2个实例（单机架2台机器上的2个ES实例，后者单机架单机器上2个ES实例），如果机架断电了，索引中分片3上面的数据就丢了，访问不了。</p>
+<p>当配置<code>cluster.routing.allocation.awareness.attributes: rack_id</code>后，配置方式如下：</p>
+<pre><code class="shell">curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;transient&quot;:{&quot;cluster.routing.allocation.awareness.attributes&quot; : &quot;rack_id&quot;}}&#39;
+</code></pre>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172654035.png" alt="image-20180705172654035"></p>
+<p>node3的rack_id值为r2，node1跟node2都是r1，所以最终实现了主副本分片未落到一个r1中。</p>
+<h2 id="强制感知分配"><a href="#强制感知分配" class="headerlink" title="强制感知分配"></a>强制感知分配</h2><p>上面的分片感知又可以称为普通感知，普通感知存在一个问题，就是如果存在4个节点n1,n2,n3,n4，配置对应的rack_id属性如下：</p>
+<pre><code class="yaml">node.name: node1  -&gt; node.rack_id: r1
+node.name: node2  -&gt; node.rack_id: r1
+node.name: node3  -&gt; node.rack_id: r2
+node.name: node4  -&gt; node.rack_id: r2
+</code></pre>
+<p>如果未配置强制感知，则当r2下面的node3，node4挂了以后，原先分给node3,node4的分片会重新再node1跟node2上分配。</p>
+<h5 id="按照rack-id做普通感知"><a href="#按照rack-id做普通感知" class="headerlink" title="按照rack_id做普通感知"></a>按照rack_id做普通感知</h5><h6 id="4个节点正常情况下："><a href="#4个节点正常情况下：" class="headerlink" title="4个节点正常情况下："></a>4个节点正常情况下：</h6><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203052403.png" alt="image-20180705203052403"></p>
+<h6 id="node3-node4挂了情况下"><a href="#node3-node4挂了情况下" class="headerlink" title="node3,node4挂了情况下"></a>node3,node4挂了情况下</h6><p>过一段时间会重新分配，这样所有的分片均落在rack_id为r1下面了：</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203243597.png" alt="image-20180705203243597"></p>
+<h5 id="按照rack-id做强制感知"><a href="#按照rack-id做强制感知" class="headerlink" title="按照rack_id做强制感知"></a>按照rack_id做强制感知</h5><p>在节点配置文件中再增加参数：</p>
+<pre><code class="Yams">cluster.routing.allocation.awareness.force.rack_id.values: r1, r2
+</code></pre>
+<p>之前的<code>cluster.routing.allocation.awareness.attributes: rack_id</code>配置也需要保留</p>
+<h6 id="4个节点均正常"><a href="#4个节点均正常" class="headerlink" title="4个节点均正常"></a>4个节点均正常</h6><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203818647.png" alt="image-20180705203818647"></p>
+<h5 id="node3-node4挂了"><a href="#node3-node4挂了" class="headerlink" title="node3,node4挂了"></a>node3,node4挂了</h5><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203923037.png" alt="image-20180705203923037"></p>
+<p>可以看到有5个副本分片始终处于unassigned状态了。</p>
+<h2 id="过滤器分配"><a href="#过滤器分配" class="headerlink" title="过滤器分配"></a>过滤器分配</h2><p>不同于<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-allocation.html" target="_blank" rel="noopener"><em>索引分片分配</em></a>提供了针对<strong>每个索引</strong>设置来控制分片到节点的分配，群集级分片分配过滤允许您允许或禁止从<strong>任何</strong>索引到特定节点的分片分配。</p>
+<p>可用的<em>动态</em>集群设置如下，其中<code>{attribute}</code> 引用任意节点属性：</p>
+<ul>
+<li><p><code>cluster.routing.allocation.include.{attribute}</code></p>
+<p>将分片分配给<code>{attribute}</code>至少具有一个逗号分隔值的节点。</p>
+</li>
+<li><p><code>cluster.routing.allocation.require.{attribute}</code></p>
+<p>仅将分片分配给<code>{attribute}</code>具有<em>所有</em>逗号分隔值的节点。</p>
+</li>
+<li><p><code>cluster.routing.allocation.exclude.{attribute}</code></p>
+<p>不要将分片分配给<code>{attribute}</code>具有<em>任何</em>逗号分隔值的节点。</p>
+</li>
+</ul>
+<p>还支持这些特殊属性：</p>
+<table>
+<thead>
+<tr>
+<th><code>_name</code></th>
+<th>按节点名称匹配节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_ip</code></td>
+<td>按IP地址匹配节点（与主机名关联的IP地址）</td>
+</tr>
+<tr>
+<td><code>_host</code></td>
+<td>按主机名匹配节点</td>
+</tr>
+</tbody>
+</table>
+<p>群集范围的分片分配过滤的典型用例是，当您想要停用某个节点时，您希望在关闭之前将分片从该节点移动到群集中的其他节点。</p>
+<p>例如，我们可以使用其IP地址解除节点，如下所示：</p>
+<pre><code class="shell">PUT _cluster/settings
+{
+  &quot;transient&quot; : {
+    &quot;cluster.routing.allocation.exclude._ip&quot; : &quot;10.0.0.1&quot;
+  }
+}
+</code></pre>
+<p>只有在不破坏其他路由约束的情况下才能重新定位碎片，例如永远不会将主碎片和副本碎片分配给同一节点。</p>
+<p>除了将多个值列为逗号分隔列表之外，还可以使用通配符指定所有属性值，例如：</p>
+<pre><code class="shell">PUT _cluster/settings
+{
+  &quot;transient&quot;: {
+    &quot;cluster.routing.allocation.exclude._ip&quot;: &quot;192.168.2.*&quot;
+  }
+}
+</code></pre>
+<p><code>{attribute}</code>属性是跟感知分配中讲的rack_id是一类，都是可以自定义命名的，如果我们配置索引分片只分配给r1属性的节点，只需要改下集群配置。</p>
+<pre><code class="shell">curl -X PUT &quot;http://localhost:9200/_cluster/settings&quot; -d&#39;
+{
+  &quot;transient&quot; : {
+    &quot;cluster.routing.allocation.include.rack_id&quot; : &quot;r1&quot;
+  }
+}
+</code></pre>
+<p>配置只作用于新增的index，旧的不受影响，可以看到新增的blog2有5个副本一直处于未分配状态，这是因为只能将分片分配在r1，集群又针对rack_id做强制感知的结果。</p>
+<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705205356812.png" alt="image-20180705205356812"></p>
 
                 </div>
             </section>
@@ -249,11 +309,11 @@
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2015/01/21/java设计模式之singleton/">
-        ← java设计模式之singleton
-    </a>
-    
     <span class="prev-next-post">•</span>
+    
+    <a class="next-post" href="/2018/07/01/将bing图片作为mac壁纸/">
+        将bing图片作为mac壁纸 →
+    </a>
     
     
 </nav>
@@ -275,7 +335,7 @@
 <div class="toc-main" style="right: -100%">
     <div class="post-toc">
         <span>TOC</span>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载安装配置sublime"><span class="toc-text">下载安装配置sublime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载安装搜狗输入法"><span class="toc-text">下载安装搜狗输入法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#给sublime添加中文支持"><span class="toc-text">给sublime添加中文支持</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分片策略"><span class="toc-text">分片策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cluster级别分片分配"><span class="toc-text">cluster级别分片分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分片配置"><span class="toc-text">分片配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分片重新均衡分配"><span class="toc-text">分片重新均衡分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简化式分片均衡分配"><span class="toc-text">简化式分片均衡分配</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于磁盘的分片分配策略"><span class="toc-text">基于磁盘的分片分配策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分片感知分配"><span class="toc-text">分片感知分配</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何使用"><span class="toc-text">如何使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#强制感知分配"><span class="toc-text">强制感知分配</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#按照rack-id做普通感知"><span class="toc-text">按照rack_id做普通感知</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#4个节点正常情况下："><span class="toc-text">4个节点正常情况下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#node3-node4挂了情况下"><span class="toc-text">node3,node4挂了情况下</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#按照rack-id做强制感知"><span class="toc-text">按照rack_id做强制感知</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#4个节点均正常"><span class="toc-text">4个节点均正常</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#node3-node4挂了"><span class="toc-text">node3,node4挂了</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤器分配"><span class="toc-text">过滤器分配</span></a></li></ol></li></ol>
     </div>
 </div>
 
