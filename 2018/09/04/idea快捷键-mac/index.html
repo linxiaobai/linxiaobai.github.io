@@ -16,7 +16,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>ubuntu下问题及解决方法总结 | linxiaobai's blog</title>
+	<title>idea快捷键(mac) | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -99,42 +99,222 @@
     <div class="inner">
         <header class="post-full-header">
             <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2015-01-26T07:32:00.000Z" itemprop="datePublished">
-                    2015-01-26
+                <time  class="post-full-meta-date" datetime="2018-09-03T16:19:00.000Z" itemprop="datePublished">
+                    2018-09-4
                 </time>
                 
                 <span class="date-divider">/</span>
                 
-                <a href="/categories/ubuntu/">ubuntu</a>&nbsp;&nbsp;
-                
                 
             </section>
-            <h1 class="post-full-title">ubuntu下问题及解决方法总结</h1>
+            <h1 class="post-full-title">idea快捷键(mac)</h1>
         </header>
-        <article class="post-full no-image">
+        <article class="post-full ">
+            
+            <figure class="post-full-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/SunFlowersStorm_ZH-CN8706728441_1920x1080.jpg)">
+            </figure>
             
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
-                    <p><strong>总结遇到的一些问题，已经找到的解决方法，不定期更新。</strong><br><em>系统版本ubuntu12.04</em><br>1.windows下面的txt文件在ubuntu下面打开乱码</p>
+                    <p>学习整理自:<a href="https://www.imooc.com/learn/924" target="_blank" rel="noopener">https://www.imooc.com/learn/924</a></p>
+<p>idea用了有3年了，看了课程才发现只是掌握了皮毛，还有很多能提高效率的地方。</p>
+<p><strong>工欲善其事，必先利其器。</strong></p>
 <blockquote>
-<p>解决方法：<br><code>iconv -f gbk -t utf8 filename.txt  &gt; filename.txt.utf8</code><br>然后打开 filename.txt.utf8</p>
+<p>基本</p>
 </blockquote>
-<hr>
-<p>2.如何kill僵尸进程</p>
+<ul>
+<li><p>fn + ⬅️ 等于home键 行首</p>
+</li>
+<li><p>fn + ➡️ 等于end键 行尾</p>
+</li>
+<li><p>fn + 删除 向后删除 </p>
+</li>
+<li><p>fn + shift + command + U     大小写转换</p>
+</li>
+<li><p>option  + ➡️    向右跳过一个单词</p>
+</li>
+<li><p>option  + ⬅️    向左跳过一个单词</p>
+</li>
+<li><p>shift + option  +  ➡️    向左选中一个单词</p>
+</li>
+<li><p>shift + option  + ⬅️    向左选中一个单词</p>
+</li>
+</ul>
 <blockquote>
-<p>解决办法:<br>输入<code>ps -A -ostat,ppid,pid,cmd | grep -e &#39;^[zZ]&#39;</code>查看对于的进程号<br>然后<code>kill -HUP 进程号</code></p>
+<p>导航栏相关</p>
 </blockquote>
-<p>今天用top指令看到了一个zombie,打算kill掉它,没想到一kill直接注销了,然后重写进入发现sogou已跪..<br>不明觉厉啊..<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/zombie.png" alt="zombie"></p>
-<p>3.插入耳机总是听到兹兹的声音</p>
+<ul>
+<li><p>home + option 光标切换到导航条菜单</p>
+</li>
+<li><p>command + e 展示最近浏览过的文件</p>
+</li>
+<li><p>shift + command + a 检索action，可以用来查询想要操作对应的快捷键，例如 检索jump等可以看到一些跳转操作</p>
+</li>
+<li><p>command + 数字1，2，3…   跳转到指定tools bar部分，例如command + 1跳转到 Project目录</p>
+</li>
+</ul>
 <blockquote>
-<p>解决办法:<br>打开系统设置-声音，发现有2个选项，一个模拟耳机，一个数字输出<br>选择数字输出发现没有声音了，应该是某些驱动没装好的原因吧，我不想装驱动，于是采用下面方式:<br>终端输入<code>alsamixer</code>,用方向键控制选中<code>S/PDIF</code>，然后敲键盘M将其禁掉<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/shengyin.png" alt="shengyin"></p>
+<p>跳转相关</p>
 </blockquote>
-<hr>
-<p>后来发现每次重启后都会重置回默认的配置，此时在配置结束时输入<code>sudo alsactl store</code>指令进行配置保存．<br>保存的路径好像是在<code>/var/lib/alsa/asound.state</code>里，暂时还没有重启后测试过．<br><a href="http://askubuntu.com/questions/50067/howto-save-alsamixer-settings" target="_blank" rel="noopener">参考链接</a></p>
-<p>4.如何卸载完全安装的软件</p>
+<ul>
+<li><p>shift + command + e 展示最近修改过的文件</p>
+</li>
+<li><p>shift + command + 删除 跳到前面编辑的地方</p>
+</li>
+<li><p>shift + command + control 跳到后面编辑的地方</p>
+</li>
+<li><p>option + command + ⬅️ 跳到上一次光标所在地</p>
+</li>
+<li><p>option + command + ➡️ 跳到下一次光标所在地</p>
+</li>
+<li><p>fn + command + F11     创建书签，选择书签ID</p>
+</li>
+<li><p>fn + shift + F11              显示书签</p>
+</li>
+<li><p>control + 书签ID             跳转到指定书签ID的位置</p>
+</li>
+<li><p>shift + command + F      收藏代码，或者函数</p>
+</li>
+<li><p>shift + control + command + ⬆️  跳到上面修改过的地方</p>
+</li>
+<li><p>shift + control + command + ⬇️  跳到下面修改过的地方</p>
+</li>
+</ul>
 <blockquote>
-<p>解决办法：<br><code>apt-get remove --purge xx</code> 卸载软件及相应配置<br><code>apt-get autoremove --purge xx</code> 清楚残留项<br><strong>注意:上述方法仅限与用apt-get install方法安装并且知道对于的软件名称</strong></p>
+<p>检索相关</p>
 </blockquote>
+<ul>
+<li><p>command + N  根据名称查找类</p>
+</li>
+<li><p>shift + command  + N 根据名称查找文件</p>
+</li>
+<li><p>shift + option + command + N 根据名称查找符号(函数等)</p>
+</li>
+<li><p>shift + control + F     根据字符串匹配查找（查找一些文本）</p>
+</li>
+</ul>
+<blockquote>
+<p>列操作</p>
+</blockquote>
+<ul>
+<li>control + command + G    开始批量操作（需要先选中相似的符号）</li>
+</ul>
+<blockquote>
+<p>Live Template            (Editor &gt; Live Templates) 快速打印出一些常用的模版内容</p>
+</blockquote>
+<ul>
+<li>psf</li>
+</ul>
+<p>public static final</p>
+<ul>
+<li>prsf</li>
+</ul>
+<p>private static final</p>
+<ul>
+<li>thr</li>
+</ul>
+<p>throw new </p>
+<p>自定义Live Template</p>
+<p>变量表示: <code>$VAR1$, $VAR2$</code></p>
+<p>结束位置: <code>$END$</code></p>
+<p>示例:</p>
+<pre><code class="java">
+/**
+
+ * $VAR1$
+
+ */
+
+private String $VAR2$ = &quot;$VAR3$&quot;;
+
+$END$
+
+</code></pre>
+<p>Abbreviation设置成 <code>psc</code></p>
+<blockquote>
+<p>Postfix      (Editor &gt; General &gt; Postfix Completion) 词尾补充</p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li>int.fori</li>
+</ul>
+<pre><code class="java">
+for (int i = 0; i &lt; 100; i++) {
+
+
+
+}
+
+</code></pre>
+<ul>
+<li>int.forr</li>
+</ul>
+<p>倒序</p>
+<ul>
+<li>list.toMap</li>
+</ul>
+<p>集合转Map</p>
+<ul>
+<li>arg.field</li>
+</ul>
+<p>快速创建变量以及利用this.name = name;进行赋值</p>
+<blockquote>
+<p>重构</p>
+</blockquote>
+<ul>
+<li>option + command + F</li>
+</ul>
+<p>抽取相同的名称到成员变量中</p>
+<ul>
+<li>option + command + M</li>
+</ul>
+<p>抽取一部分代码到一个方法中</p>
+<blockquote>
+<p>运行</p>
+</blockquote>
+<ul>
+<li><p>fn + shift + control + F9      以DEBUG的方式运行当前上下文可执行的部分</p>
+</li>
+<li><p>fn + shift + control + F10    以RUN的方式运行当前上下文可执行的部分</p>
+</li>
+<li><p>fn + shift + option + F9       选择最近DEBUG的程序</p>
+</li>
+</ul>
+<blockquote>
+<p>文件操作</p>
+</blockquote>
+<ul>
+<li><p>fn + control + option + N     在当前文件夹下新建文件</p>
+</li>
+<li><p>fn + F5      复制当前文件</p>
+</li>
+<li><p>fn + F6      复制当前文件到指定文件夹</p>
+</li>
+</ul>
+<blockquote>
+<p>文本操作</p>
+</blockquote>
+<ul>
+<li><p>shift + command + V 剪贴板，展示最近复制的文本内容</p>
+</li>
+<li><p>shift + command + C 复制完整路径</p>
+</li>
+<li><p>command + C 复制文件名</p>
+</li>
+</ul>
+<blockquote>
+<p>结构图</p>
+</blockquote>
+<ul>
+<li><p>command + F12   展示当前类的大纲</p>
+</li>
+<li><p>shift + option + command + U   在pom.xml执行展示maven的依赖关系或者在类上执行展示类的继承关系</p>
+</li>
+<li><p>control + H     展示继承关系</p>
+</li>
+<li><p>control + option + H 展示方法的调用关系</p>
+</li>
+</ul>
 
                 </div>
             </section>
@@ -144,14 +324,10 @@
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2015/01/31/redis用scan进行数据的迭代遍历/">
-        ← redis用scan进行数据的迭代遍历
-    </a>
-    
     <span class="prev-next-post">•</span>
     
-    <a class="next-post" href="/2015/01/21/java设计模式之singleton/">
-        java设计模式之singleton →
+    <a class="next-post" href="/2018/07/05/ES分片分配规则/">
+        ES分片分配规则 →
     </a>
     
     

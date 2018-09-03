@@ -2,6 +2,8 @@
 <html>
 
 
+ 
+
 
 
 
@@ -16,7 +18,7 @@
 	
 	<meta name="theme-color" content="#3c484e">
 	
-	<title>ubuntu下问题及解决方法总结 | linxiaobai's blog</title>
+	<title>归档 | linxiaobai's blog</title>
 	<meta name="description" content="自由の風" />
 	<meta name="generator" content="linxiaobai's blog">
 
@@ -30,26 +32,18 @@
 	<link rel="stylesheet" href="/css/allinone.min.css"> 
 
 	
-	
-	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-	
-
-	
-	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
-	
-
-	
-	
 </head>
-<body class="post-template">
+<body class="page-template">
     <div class="site-wrapper">
         
 
 
 
 
-<header class="site-header outer" style="z-index: 999">
+<header class="site-header outer " style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)">
     <div class="inner">
+        
+        
         
 <nav class="site-nav"> 
     <div class="site-nav-left">
@@ -91,93 +85,77 @@
 </div>
     </div>
 </nav>
+        
+        <div class="site-header-content">
+            <h1 class="site-title">
+                
+                归档
+                
+            </h1>
+            <h2 class="site-description">共 25 篇</h2>
+        </div>
+        
+        
     </div>
 </header>
 
 
 <main id="site-main" class="site-main outer" role="main">
-    <div class="inner">
-        <header class="post-full-header">
-            <section class="post-full-meta">
-                <time  class="post-full-meta-date" datetime="2015-01-26T07:32:00.000Z" itemprop="datePublished">
-                    2015-01-26
-                </time>
-                
-                <span class="date-divider">/</span>
-                
-                <a href="/categories/ubuntu/">ubuntu</a>&nbsp;&nbsp;
-                
-                
-            </section>
-            <h1 class="post-full-title">ubuntu下问题及解决方法总结</h1>
-        </header>
-        <article class="post-full no-image">
-            
-            <section class="post-full-content">
-                <div id="lightgallery" class="markdown-body">
-                    <p><strong>总结遇到的一些问题，已经找到的解决方法，不定期更新。</strong><br><em>系统版本ubuntu12.04</em><br>1.windows下面的txt文件在ubuntu下面打开乱码</p>
-<blockquote>
-<p>解决方法：<br><code>iconv -f gbk -t utf8 filename.txt  &gt; filename.txt.utf8</code><br>然后打开 filename.txt.utf8</p>
-</blockquote>
-<hr>
-<p>2.如何kill僵尸进程</p>
-<blockquote>
-<p>解决办法:<br>输入<code>ps -A -ostat,ppid,pid,cmd | grep -e &#39;^[zZ]&#39;</code>查看对于的进程号<br>然后<code>kill -HUP 进程号</code></p>
-</blockquote>
-<p>今天用top指令看到了一个zombie,打算kill掉它,没想到一kill直接注销了,然后重写进入发现sogou已跪..<br>不明觉厉啊..<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/zombie.png" alt="zombie"></p>
-<p>3.插入耳机总是听到兹兹的声音</p>
-<blockquote>
-<p>解决办法:<br>打开系统设置-声音，发现有2个选项，一个模拟耳机，一个数字输出<br>选择数字输出发现没有声音了，应该是某些驱动没装好的原因吧，我不想装驱动，于是采用下面方式:<br>终端输入<code>alsamixer</code>,用方向键控制选中<code>S/PDIF</code>，然后敲键盘M将其禁掉<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/shengyin.png" alt="shengyin"></p>
-</blockquote>
-<hr>
-<p>后来发现每次重启后都会重置回默认的配置，此时在配置结束时输入<code>sudo alsactl store</code>指令进行配置保存．<br>保存的路径好像是在<code>/var/lib/alsa/asound.state</code>里，暂时还没有重启后测试过．<br><a href="http://askubuntu.com/questions/50067/howto-save-alsamixer-settings" target="_blank" rel="noopener">参考链接</a></p>
-<p>4.如何卸载完全安装的软件</p>
-<blockquote>
-<p>解决办法：<br><code>apt-get remove --purge xx</code> 卸载软件及相应配置<br><code>apt-get autoremove --purge xx</code> 清楚残留项<br><strong>注意:上述方法仅限与用apt-get install方法安装并且知道对于的软件名称</strong></p>
-</blockquote>
+	<div class="inner">
+		<div class="post-feed">
+			
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" href="/2018/09/04/idea快捷键-mac/">
+					<div class="post-card-image" style="background-image: url(https://cn.bing.com/az/hprichbg/rb/SunFlowersStorm_ZH-CN8706728441_1920x1080.jpg)"></div>
+				</a>
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" href="/2018/09/04/idea快捷键-mac/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								| 
+								
+								<time datetime="2018-09-03T16:19:00.000Z" itemprop="datePublished">
+									9月 4 2018
+								</time>
+							</span>
+							<h2 class="post-card-title">idea快捷键(mac)</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								学习整理自:https://www.imooc.com/learn/924
+idea用了有3年了，看了课程才发现只是掌握了皮毛，还有很多能提高效率的地方。
+工欲善其事，必先利其器。
 
-                </div>
-            </section>
-        </article>
-    </div>
-    
+基本
+
+
+fn 
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						
+						<span class="post-card-author">Kevin Lim</span>
+					</footer>
+				</div>
+			</article>
+			
+		</div>
+	</div>
+	
 <nav class="pagination">
     
     
-    <a class="prev-post" href="/2015/01/31/redis用scan进行数据的迭代遍历/">
-        ← redis用scan进行数据的迭代遍历
-    </a>
-    
-    <span class="prev-next-post">•</span>
-    
-    <a class="next-post" href="/2015/01/21/java设计模式之singleton/">
-        java设计模式之singleton →
-    </a>
-    
     
 </nav>
-    
 </main>
-
-<div class="t-g-control">
-    <div class="gotop">
-        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
-    </div>
-    <div class="toc-control">
-        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
-        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
-    </div>
-    <div class="gobottom">
-        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
-    </div>
-</div>
-<div class="toc-main" style="right: -100%">
-    <div class="post-toc">
-        <span>TOC</span>
-        
-    </div>
-</div>
-
 
 
         
@@ -318,132 +296,6 @@
 		</nav>
 	</div>
 </footer>
-
-
-<div class="floating-header" >
-    <progress class="progress" value="0">
-        <div class="progress-container">
-            <span class="progress-bar"></span>
-        </div>
-    </progress>
-</div>
-<script>
-	$(document).ready(function () {
-    var progressBar = document.querySelector('progress');
-    var header = document.querySelector('.floating-header');
-    var title = document.querySelector('.post-full-title');
-    var lastScrollY = window.scrollY;
-    var lastWindowHeight = window.innerHeight;
-    var lastDocumentHeight = $(document).height();
-    var ticking = false;
-
-    function onScroll() {
-        lastScrollY = window.scrollY;
-        requestTick();
-    }
-    function onResize() {
-        lastWindowHeight = window.innerHeight;
-        lastDocumentHeight = $(document).height();
-        requestTick();
-    }
-    function requestTick() {
-        if (!ticking) {
-            requestAnimationFrame(update);
-        }
-        ticking = true;
-    }
-    function update() {
-        var rect = title.getBoundingClientRect();
-        var trigger = rect.top + window.scrollY;
-        var triggerOffset = title.offsetHeight + 35;
-        var progressMax = lastDocumentHeight - lastWindowHeight;
-            // show/hide floating header
-            if (lastScrollY >= trigger + triggerOffset) {
-                header.classList.add('floating-active');
-            } else {
-                header.classList.remove('floating-active');
-            }
-            progressBar.setAttribute('max', progressMax);
-            progressBar.setAttribute('value', lastScrollY);
-            ticking = false;
-        }
-        window.addEventListener('scroll', onScroll, {passive: true});
-        window.addEventListener('resize', onResize, false);
-        update();
-
-        // TOC
-        var width = $('.toc-main').width();
-        $('.toc-control').click(function () {
-            if ($('.t-g-control').css('width')=="50px") {
-                if ($('.t-g-control').css('right')=="0px") {
-                    $('.t-g-control').animate({right: width}, "slow");
-                    $('.toc-main').animate({right: 0}, "slow");
-                    toc_icon()
-                } else {
-                    $('.t-g-control').animate({right: 0}, "slow");
-                    $('.toc-main').animate({right: -width}, "slow");
-                    toc_icon()
-                }
-            } else {
-                if ($('.toc-main').css('right')=="0px") {
-                    $('.toc-main').slideToggle("fast", toc_icon());
-                } else {
-                    $('.toc-main').css('right', '0px');
-                    toc_icon()
-                }
-            }
-        })
-
-        function toc_icon() {
-            if ($('.toc-icon').css('display')=="none") {
-                $('.toc-close').hide();
-                $('.toc-icon').show();
-            } else {
-                $('.toc-icon').hide();
-                $('.toc-close').show();
-            }
-        }
-
-        $('.gotop').click(function(){
-            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
-        });
-        $('.gobottom').click(function () {
-            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
-        });
-
-        // highlight
-        // https://highlightjs.org
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-        $('td.code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-    });
-</script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
-
-
-
-<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
-
-
-
-<script>
-	$(function () {
-		var postImg = $('#lightgallery').find('img');
-		postImg.addClass('post-img');
-		postImg.each(function () {
-			var imgSrc = $(this).attr('src');
-			$(this).attr('data-src', imgSrc);
-		});
-		$('#lightgallery').lightGallery({selector: '.post-img'});
-	});
-</script>
-
 
 
     </div>
