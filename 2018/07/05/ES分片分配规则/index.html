@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -222,13 +222,13 @@ node.name: node2  -&gt; node.rack_id: r1
 node.name: node3  -&gt; node.rack_id: r2
 </code></pre><p>通过配置：<code>cluster.routing.allocation.awareness.attributes: rack_id</code>来根据rack_id去分片分配感知。</p>
 <p>配置前，所有分片均分在各个节点。</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172217547.png" alt="image-20180705172217547"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/image-20180705172217547.png" alt="image-20180705172217547"></p>
 <p>这种配置就存在前面说的问题，node1跟node2可以看成一个机架上的2个实例（单机架2台机器上的2个ES实例，后者单机架单机器上2个ES实例），如果机架断电了，索引中分片3上面的数据就丢了，访问不了。</p>
 <p><br></p>
 <p>当配置<code>cluster.routing.allocation.awareness.attributes: rack_id</code>后，配置方式如下：</p>
 <pre><code class="shell">curl -X PUT &#39;http://localhost:9200/_cluster/settings&#39; -d &#39;{&quot;transient&quot;:{&quot;cluster.routing.allocation.awareness.attributes&quot; : &quot;rack_id&quot;}}&#39;
 </code></pre>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705172654035.png" alt="image-20180705172654035"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/image-20180705172654035.png" alt="image-20180705172654035"></p>
 <p>node3的rack_id值为r2，node1跟node2都是r1，所以最终实现了主副本分片未落到一个r1中。</p>
 <p><br><br><br><br><br></p>
 <h2 id="强制感知分配"><a href="#强制感知分配" class="headerlink" title="强制感知分配"></a>强制感知分配</h2><p>上面的分片感知又可以称为普通感知，普通感知存在一个问题，就是如果存在4个节点n1,n2,n3,n4，配置对应的rack_id属性如下：</p>
@@ -238,15 +238,15 @@ node.name: node3  -&gt; node.rack_id: r2
 node.name: node4  -&gt; node.rack_id: r2
 </code></pre>
 <p>如果未配置强制感知，则当r2下面的node3，node4挂了以后，原先分给node3,node4的分片会重新再node1跟node2上分配。</p>
-<h5 id="按照rack-id做普通感知"><a href="#按照rack-id做普通感知" class="headerlink" title="按照rack_id做普通感知"></a>按照rack_id做普通感知</h5><h6 id="4个节点正常情况下："><a href="#4个节点正常情况下：" class="headerlink" title="4个节点正常情况下："></a>4个节点正常情况下：</h6><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203052403.png" alt="image-20180705203052403"></p>
+<h5 id="按照rack-id做普通感知"><a href="#按照rack-id做普通感知" class="headerlink" title="按照rack_id做普通感知"></a>按照rack_id做普通感知</h5><h6 id="4个节点正常情况下："><a href="#4个节点正常情况下：" class="headerlink" title="4个节点正常情况下："></a>4个节点正常情况下：</h6><p><img src="http://linxiaobai.github.io/img/blog/image-20180705203052403.png" alt="image-20180705203052403"></p>
 <h6 id="node3-node4挂了情况下"><a href="#node3-node4挂了情况下" class="headerlink" title="node3,node4挂了情况下"></a>node3,node4挂了情况下</h6><p>过一段时间会重新分配，这样所有的分片均落在rack_id为r1下面了：</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203243597.png" alt="image-20180705203243597"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/image-20180705203243597.png" alt="image-20180705203243597"></p>
 <h5 id="按照rack-id做强制感知"><a href="#按照rack-id做强制感知" class="headerlink" title="按照rack_id做强制感知"></a>按照rack_id做强制感知</h5><p>在节点配置文件中再增加参数：</p>
 <pre><code class="Yams">cluster.routing.allocation.awareness.force.rack_id.values: r1, r2
 </code></pre>
 <p>之前的<code>cluster.routing.allocation.awareness.attributes: rack_id</code>配置也需要保留</p>
-<h6 id="4个节点均正常"><a href="#4个节点均正常" class="headerlink" title="4个节点均正常"></a>4个节点均正常</h6><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203818647.png" alt="image-20180705203818647"></p>
-<h5 id="node3-node4挂了"><a href="#node3-node4挂了" class="headerlink" title="node3,node4挂了"></a>node3,node4挂了</h5><p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705203923037.png" alt="image-20180705203923037"></p>
+<h6 id="4个节点均正常"><a href="#4个节点均正常" class="headerlink" title="4个节点均正常"></a>4个节点均正常</h6><p><img src="http://linxiaobai.github.io/img/blog/image-20180705203818647.png" alt="image-20180705203818647"></p>
+<h5 id="node3-node4挂了"><a href="#node3-node4挂了" class="headerlink" title="node3,node4挂了"></a>node3,node4挂了</h5><p><img src="http://linxiaobai.github.io/img/blog/image-20180705203923037.png" alt="image-20180705203923037"></p>
 <p>可以看到有5个副本分片始终处于unassigned状态了。</p>
 <p><br><br><br><br><br></p>
 <h2 id="过滤器分配"><a href="#过滤器分配" class="headerlink" title="过滤器分配"></a>过滤器分配</h2><p>不同于<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-allocation.html" target="_blank" rel="noopener"><em>索引分片分配</em></a>提供了针对<strong>每个索引</strong>设置来控制分片到节点的分配，群集级分片分配过滤允许您允许或禁止从<strong>任何</strong>索引到特定节点的分片分配。</p>
@@ -308,7 +308,7 @@ node.name: node4  -&gt; node.rack_id: r2
 }
 </code></pre>
 <p>配置只作用于新增的index，旧的不受影响，可以看到新增的blog2有5个副本一直处于未分配状态，这是因为只能将分片分配在r1，集群又针对rack_id做强制感知的结果。</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image-20180705205356812.png" alt="image-20180705205356812"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/image-20180705205356812.png" alt="image-20180705205356812"></p>
 
                 </div>
             </section>
@@ -362,7 +362,7 @@ node.name: node4  -&gt; node.rack_id: r2
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -449,7 +449,7 @@ node.name: node4  -&gt; node.rack_id: r2
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -465,7 +465,7 @@ node.name: node4  -&gt; node.rack_id: r2
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>

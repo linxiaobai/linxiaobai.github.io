@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -118,14 +118,14 @@
                     <p><strong><em>来不及解释了，先上车(<a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/#/description" target="_blank" rel="noopener">Letter Combinations of a Phone Number</a>)看题。</em></strong></p>
 <p>嫌打开链接慢的接着往下看，我把题目搬出来了。</p>
 <h3 id="Letter-Combinations-of-a-Phone-Number"><a href="#Letter-Combinations-of-a-Phone-Number" class="headerlink" title="Letter Combinations of a Phone Number"></a>Letter Combinations of a Phone Number</h3><blockquote>
-<p>Given a digit string, return all possible letter combinations that the number could represent.A mapping of digit to letters (just like on the telephone buttons) is given below.<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/200px-Telephone-keypad2.svg.png" alt="keyboard"><br>Input:Digit string “23”<br>Output: [“ad”, “ae”, “af”, “bd”, “be”, “bf”, “cd”, “ce”, “cf”].</p>
+<p>Given a digit string, return all possible letter combinations that the number could represent.A mapping of digit to letters (just like on the telephone buttons) is given below.<br><img src="http://linxiaobai.github.io/img/blog/200px-Telephone-keypad2.svg.png" alt="keyboard"><br>Input:Digit string “23”<br>Output: [“ad”, “ae”, “af”, “bd”, “be”, “bf”, “cd”, “ce”, “cf”].</p>
 </blockquote>
 <p>我打开题目的标签一看，上面显示Backtracing(回溯)，意思是这道题可以用回溯算法来解，那我们先了解一下回溯算法。</p>
 <h3 id="回溯算法"><a href="#回溯算法" class="headerlink" title="回溯算法"></a>回溯算法</h3><blockquote>
 <p>回溯算法实际上就是一种搜索算法，它跟穷举算法很相似，但是它比穷举要聪明，它会利用一些条件规避掉一些无用解。回溯算法主要分为4个步骤：<br>1.抽象出问题的解空间，为了便于理解，可以将解空间抽象成一颗树的结构<br>2.采用DFS(深度优先)算法遍历所有的解空间<br>3.利用限制条件(分析得出)过滤掉一些无用解，即不用对无用解进行遍历<br>4.输出所有解</p>
 </blockquote>
 <p>针对leetcode的这道题目，实际上就是列出所有解，并不需要规避掉无用解。我们开始会想到用常规的for循环嵌套去解决，比如输入“23”，我们可以先循环abc再循环def进行组合输出。但是比较麻烦的是输入内容不是固定的，你不知道for循环有几层，这个是动态的，当然不排除某些大神可以想到别的方法遍历输出。</p>
-<p>我们尝试下用回溯算法解这道题，按照步骤<br><strong>1.我们先找到问题的解空间</strong><br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%9B%9E%E6%BA%AF%E5%9B%BE.png" alt="回溯"><br>我们以一个树的结构来表示解空间，实际上这道题我们的解可以理解成为是一个路径，例如a-&gt;d，只不过我们最后输出的结果是以ad这种格式输出，所以我们可以将每个解称为解向量，解空间就是包含所有的解向量的一个整体。<br>如图，我们每个解从ROOT结点出发，这个点我们定义的起点，不会包含在解向量中。<br><strong>2.按照DFS遍历解空间</strong><br>我们选择2键盘对应的abc 3个字母中的一个，我们选择了a，3键盘在2键盘后面按下的，那么我们认为3键盘包含的所有字母为2键盘中每个字母的子结点。我们选择其中一个子结点d，此时我们已经遍历到最深处了，我们可以输出此时的解ab。然后我们回溯到上一个结点a，接着去选择它没有遍历过的子结点e，以此类推。DFS过程也可以参照下图来理解:<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%9B%9E%E6%BA%AF233.png" alt="DFS"><br><strong>3.利用限制条件过滤掉无用解</strong><br>这道题实际上没有限制条件，当然我们也可以认为以下情况为限制条件，就是从d回溯到a，将d结点标示成已经访问，然后a重新选择子节点时过滤掉已经访问的d结点，当a结点遍历完所有的d,e,f结点后回溯到ROOT结点时将d,e,f重置为未访问。<br><strong>4.输出所有解</strong><br>在我们步骤3的时候找出满足条件的解就可以直接输出了，例如ad,ae等，或者将每个解保存在一个全局变量中，最后进行输出。</p>
+<p>我们尝试下用回溯算法解这道题，按照步骤<br><strong>1.我们先找到问题的解空间</strong><br><img src="http://linxiaobai.github.io/img/blog/%E5%9B%9E%E6%BA%AF%E5%9B%BE.png" alt="回溯"><br>我们以一个树的结构来表示解空间，实际上这道题我们的解可以理解成为是一个路径，例如a-&gt;d，只不过我们最后输出的结果是以ad这种格式输出，所以我们可以将每个解称为解向量，解空间就是包含所有的解向量的一个整体。<br>如图，我们每个解从ROOT结点出发，这个点我们定义的起点，不会包含在解向量中。<br><strong>2.按照DFS遍历解空间</strong><br>我们选择2键盘对应的abc 3个字母中的一个，我们选择了a，3键盘在2键盘后面按下的，那么我们认为3键盘包含的所有字母为2键盘中每个字母的子结点。我们选择其中一个子结点d，此时我们已经遍历到最深处了，我们可以输出此时的解ab。然后我们回溯到上一个结点a，接着去选择它没有遍历过的子结点e，以此类推。DFS过程也可以参照下图来理解:<br><img src="http://linxiaobai.github.io/img/blog/%E5%9B%9E%E6%BA%AF233.png" alt="DFS"><br><strong>3.利用限制条件过滤掉无用解</strong><br>这道题实际上没有限制条件，当然我们也可以认为以下情况为限制条件，就是从d回溯到a，将d结点标示成已经访问，然后a重新选择子节点时过滤掉已经访问的d结点，当a结点遍历完所有的d,e,f结点后回溯到ROOT结点时将d,e,f重置为未访问。<br><strong>4.输出所有解</strong><br>在我们步骤3的时候找出满足条件的解就可以直接输出了，例如ad,ae等，或者将每个解保存在一个全局变量中，最后进行输出。</p>
 <h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>我认为回溯算法逻辑上比较复杂的地方在与抽象出解空间，如果你抽象不出来问题的解空间，那么你就没法往下进行求解了。<br>而编码部分较麻烦部分在于DFS遍历，我们可以使用递归或者利用栈来实现DFS。DFS一个递归实现的伪代码如下，true和false可以理解为是否为该题的一个解：</p>
 <pre><code>boolean solve(Node n) {
     if n is a leaf node {
@@ -309,7 +309,7 @@ public class PrimeCircle {
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -396,7 +396,7 @@ public class PrimeCircle {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -412,7 +412,7 @@ public class PrimeCircle {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>

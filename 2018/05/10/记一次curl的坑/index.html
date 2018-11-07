@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -212,7 +212,7 @@
     }
 </code></pre>
 <p>观察上面代码可以看到，如果让SpringMVC来解析请求的数据，它会先遍历已有的转化器集合，里面包含JSON，XML等等转化器,如下图。不同的解析器会支持对应的MediaType，代码中会根据用户请求头中的ContentType值来做判断，确定具体使用哪种converter（详见<code>converter.canRead(targetClass, contentType)</code>）。</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-10%20%E4%B8%8B%E5%8D%8811.20.56.png" alt="converts"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-10%20%E4%B8%8B%E5%8D%8811.20.56.png" alt="converts"></p>
 <p>所以问题就很清楚了，个推那边请求时，请求头中的<strong>ContentType</strong>给的值是<code>application/unknown;charset=UTF-8</code> ，跟我们想要的<code>MappingJackson2HttpMessageConverter</code>所支持的<code>application/json</code>，<code>application/*+json</code>不匹配，所以没有定位到<code>MappingJackson2HttpMessageConverter</code>。而且也成功绕过了所有的converter（因为没有一个MediaType是对应<code>application/unknown;charset=UTF-8</code>这么坑的类型），所以最后抛异常了。</p>
 <p>测试环境之所以没有测出来是因为我用swagger生成的curl默认给我加了<code>--header &#39;Content-Type: application/json&#39;</code>，毕竟swagger很规范，知道我请求的数据是json。</p>
 <p>解决办法请接着往下看。</p>
@@ -303,7 +303,7 @@
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -390,7 +390,7 @@
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -406,7 +406,7 @@
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>

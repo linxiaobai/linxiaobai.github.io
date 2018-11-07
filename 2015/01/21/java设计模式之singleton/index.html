@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -141,7 +141,7 @@ public class JedisPool {
 </code></pre><blockquote>
 <p>私有构造器仅被调用一次，用来实例化INSTANCE。由于缺少公有的构造方法，所以外部每次想用Elivs的对象只能用Elvis.INSTANCE这一个对象。<br>我们可以通过输出他们的来简单判断2个对象是否一样，Object的toString方法后面的hashCode是和其在内存中的引用地址有关系的。</p>
 </blockquote>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/2015-01-21 23:42:46的屏幕截图.png" alt="图例1"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/2015-01-21 23:42:46的屏幕截图.png" alt="图例1"></p>
 <p>有一点需要注意的是，这种方式是可以通过反射来调用私有构造方法来生成不同的实例化对象，<br>书上提到了这个问题，于是我测试了一下确实是有问题的。</p>
 <pre><code>package com.pattern.singleton;
 
@@ -219,7 +219,7 @@ public class Test {
     }
 }
 </code></pre>
-<p>测试结果:<br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/2015-01-22 00:03:41的屏幕截图.png" alt="例子2"></p>
+<p>测试结果:<br><img src="http://linxiaobai.github.io/img/blog/2015-01-22 00:03:41的屏幕截图.png" alt="例子2"></p>
 <p><strong>我们可以看到这序列化前后对象是不一样的</strong></p>
 <blockquote>
 <p>这时候如果我们想解决这个问题就需要用到一个readResolve方法</p>
@@ -237,7 +237,7 @@ public class Test {
 <p>书上结尾处提到这种方法在功能上和方法1，方法2相近，但是它更简洁，同时提供了序列化机制，绝对防止对此实例化，即使在面临上面的反射和序列化问题时。<br>所以<em>单元素的枚举类型是实现singleton的最佳方法</em></p>
 </blockquote>
 <p>写一个序列化测试结果吧，另一个暴力反射的就不写了，有人测试过<a href="http://coolxing.iteye.com/blog/1446648" target="_blank" rel="noopener">参考网址</a></p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/enum.png" alt="例3"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/enum.png" alt="例3"></p>
 
                 </div>
             </section>
@@ -291,7 +291,7 @@ public class Test {
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -378,7 +378,7 @@ public class Test {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -394,7 +394,7 @@ public class Test {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>

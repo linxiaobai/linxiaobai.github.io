@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -122,19 +122,19 @@
 <h1 id="一-配置master和slave-为了方便-所有操作均在一台电脑上-通过改变端口号去模拟多台服务器"><a href="#一-配置master和slave-为了方便-所有操作均在一台电脑上-通过改变端口号去模拟多台服务器" class="headerlink" title="一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)"></a>一.配置master和slave(为了方便,所有操作均在一台电脑上,通过改变端口号去模拟多台服务器)</h1><p>1.用<code>mkdir testRedis</code>指令建一个测试目录</p>
 <p>2.将redis-2.8.19拷贝到该目录下,并且再复制其多个副本<br>一共copy3个出来就行,分别命名redis1,redis2,redis3,注意linux下拷贝目录用<code>cp -r xx xx</code>指令,别把-r丢了 </p>
 <p>3.将redis1里面的redis.conf配置文件中的port值设置为6380,其余2个别设置为6381和6382,并且在后2个配置<em>slave of 127.0.0.1 6380</em><br>这样最终设置成的环境是redis1目录里面运行的是主,redis2和redis3是它的从,如下图</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelms.png" alt="ms"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/sentinelms.png" alt="ms"></p>
 <h1 id="二-配置并执行sentinel"><a href="#二-配置并执行sentinel" class="headerlink" title="二.配置并执行sentinel"></a>二.配置并执行sentinel</h1><p>1.修改redis1里面sentinel.conf配置文件<br>需要修改的参数有<br>    <em>port 26380</em><br>    <em>sentinel monitor mymaster 127.0.0.1 6380 2</em><br>    <em>sentinel down-after-milliseconds mymaster 30000</em><br>    <em>sentinel failover-timeout mymaster 10000</em></p>
 <p>第一个参数就是sentinel进程占用的端口号,我们需要配置每个sentinel.conf的端口号不相同,即在redis2,redis3里面的设置成26381和26382;<br>第二个参数是监听的master身份的redis服务器,mymaster应该就是一个别名吧,应该是用来跟其他参数统一配置,例如下面均为mymaster,最后面的那个2表示的意思是:<br>最少有2个sentinel进程认为master挂掉了,才会更换master;<br>第三个参数表示当master服务器端失去连接30秒了,就换master;<br>第四个参数表示易主之前,最后需要等待的时间,因为做测试,所以改成10秒.</p>
 <p>2.运行3个sentinel实例<br>在src下面有redis-sentinel脚本,和启动redis服务一样,输入<code>redis-sentinel ../sentinel.conf</code>即开始运行</p>
 <h1 id="三-手动down掉master服务器-然后看图说话"><a href="#三-手动down掉master服务器-然后看图说话" class="headerlink" title="三.手动down掉master服务器,然后看图说话"></a>三.手动down掉master服务器,然后看图说话</h1><p>1.用ctrl+C关闭redis1里对于的那个master</p>
-<p><strong>大哥一挂,小弟们纷纷呼唤着大哥归来</strong><br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelfind.png" alt="图1"></p>
-<p><strong>30秒过去了,大哥仍无视2小弟的呼唤,2小弟开始去sentinel报案说master挂机了,团战没C位怎么打</strong><br><strong>于是sentinel认为这个大哥太垃圾了,跟2个小弟说:’你们2个自己投票吧,选一个人当C位’</strong><br><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelsentinelSwitchM" alt="图2"></p>
+<p><strong>大哥一挂,小弟们纷纷呼唤着大哥归来</strong><br><img src="http://linxiaobai.github.io/img/blog/sentinelfind.png" alt="图1"></p>
+<p><strong>30秒过去了,大哥仍无视2小弟的呼唤,2小弟开始去sentinel报案说master挂机了,团战没C位怎么打</strong><br><strong>于是sentinel认为这个大哥太垃圾了,跟2个小弟说:’你们2个自己投票吧,选一个人当C位’</strong><br><img src="http://linxiaobai.github.io/img/blog/sentinelsentinelSwitchM" alt="图2"></p>
 <p><strong>这里10秒钟的failover-timeout配的不好,应该要大于30秒比较好,如果设置成了默认的5分钟.2小弟就还要再用5分钟去彼此同步大哥的装备(数据)</strong><br><strong>看到Next failover delay:后面的话了吗,那个时间就是当前时间加上上面配置的failover-timeout时间,即在进行故障转移之前需要等这么长时间,具体用途应该是修改配置文件或是同步数据之类的吧</strong></p>
 <p>2.sentinel产生了新的master</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelnewmaster.png" alt="图3"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/sentinelnewmaster.png" alt="图3"></p>
 <p>3.当原先的master重写连接上</p>
 <p><strong>老的大哥网吧断电了,终于reconnect了,但是发现小弟已经不认它了,它只能被迫改行当小弟</strong></p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/sentinelreconnect.png" alt="图5"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/sentinelreconnect.png" alt="图5"></p>
 <p>4.查看配置文件发现slaveof属性发生了改变<br>redis2(端口号6381)的变为 <em>slaveof 127.0.0.1 6382</em><br>另外新master里面的sentinel配置文件会有部分变动</p>
 
                 </div>
@@ -189,7 +189,7 @@
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -276,7 +276,7 @@
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -292,7 +292,7 @@
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>

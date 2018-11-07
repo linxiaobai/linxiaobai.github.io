@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="shortcut icon" href="http://7u2mp7.com1.z0.glb.clouddn.com/favicon.ico">
+	<link rel="shortcut icon" href="http://linxiaobai.github.io/favicon.ico">
 	
 	
 	
@@ -438,7 +438,7 @@ Created at:
 </code></pre>
 <p>那么deallocate()方法在跟release()方法又有什么关系呢？</p>
 <p>看下<code>PooledUnsafeDirectByteBuf</code>继承类的结构：</p>
-<p><img src="http://7u2mp7.com1.z0.glb.clouddn.com/image2018-6-26%2017_24_44.png" alt="继承关系"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/image2018-6-26%2017_24_44.png" alt="继承关系"></p>
 <p>调用的release()方法在 父类<code>AbstractReferenceCountedByteBuf</code>中，可以看到确实在release时调用了deallocate，至此应该弄清楚原因了，分析2中的猜测<strong>【内存池中对象被分配使用后未进行回收，导致不断新增对象直到到达JVM限制的临界值】</strong>是正确的。</p>
 <pre><code class="java">@Override
 public boolean release() {
@@ -523,7 +523,7 @@ private boolean release0(int decrement) {
             
             
 
-  <article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+  <article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header">
       <small class="read-next-card-header-sitetitle">&mdash; linxiaobai's blog &mdash;</small>
       <h3 class="read-next-card-header-title">最新文章</h3>
@@ -610,7 +610,7 @@ private boolean release0(int decrement) {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
     <header class="read-next-card-header" style="padding-bottom: 20px">
         <h3 class="read-next-card-header-title">分类</h3>
     </header>
@@ -626,7 +626,7 @@ private boolean release0(int decrement) {
             
             
 
-<article class="read-next-card"  style="background-image: url(http://7u2mp7.com1.z0.glb.clouddn.com/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
+<article class="read-next-card"  style="background-image: url(http://linxiaobai.github.io/AzoresPortugal_ROW13648393065_1920x1200.jpg)"  >
 	<header class="read-next-card-header" style="padding-bottom: 20px">
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>
