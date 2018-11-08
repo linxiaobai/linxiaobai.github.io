@@ -128,7 +128,7 @@
 <p>2.运行3个sentinel实例<br>在src下面有redis-sentinel脚本,和启动redis服务一样,输入<code>redis-sentinel ../sentinel.conf</code>即开始运行</p>
 <h1 id="三-手动down掉master服务器-然后看图说话"><a href="#三-手动down掉master服务器-然后看图说话" class="headerlink" title="三.手动down掉master服务器,然后看图说话"></a>三.手动down掉master服务器,然后看图说话</h1><p>1.用ctrl+C关闭redis1里对于的那个master</p>
 <p><strong>大哥一挂,小弟们纷纷呼唤着大哥归来</strong><br><img src="http://linxiaobai.github.io/img/blog/sentinelfind.png" alt="图1"></p>
-<p><strong>30秒过去了,大哥仍无视2小弟的呼唤,2小弟开始去sentinel报案说master挂机了,团战没C位怎么打</strong><br><strong>于是sentinel认为这个大哥太垃圾了,跟2个小弟说:’你们2个自己投票吧,选一个人当C位’</strong><br><img src="http://linxiaobai.github.io/img/blog/sentinelsentinelSwitchM" alt="图2"></p>
+<p><strong>30秒过去了,大哥仍无视2小弟的呼唤,2小弟开始去sentinel报案说master挂机了,团战没C位怎么打</strong><br><strong>于是sentinel认为这个大哥太垃圾了,跟2个小弟说:’你们2个自己投票吧,选一个人当C位’</strong><br><img src="http://linxiaobai.github.io/img/blog/sentinelsentinelSwitchM.png" alt="图2"></p>
 <p><strong>这里10秒钟的failover-timeout配的不好,应该要大于30秒比较好,如果设置成了默认的5分钟.2小弟就还要再用5分钟去彼此同步大哥的装备(数据)</strong><br><strong>看到Next failover delay:后面的话了吗,那个时间就是当前时间加上上面配置的failover-timeout时间,即在进行故障转移之前需要等这么长时间,具体用途应该是修改配置文件或是同步数据之类的吧</strong></p>
 <p>2.sentinel产生了新的master</p>
 <p><img src="http://linxiaobai.github.io/img/blog/sentinelnewmaster.png" alt="图3"></p>

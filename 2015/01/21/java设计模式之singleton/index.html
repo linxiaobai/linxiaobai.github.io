@@ -141,7 +141,7 @@ public class JedisPool {
 </code></pre><blockquote>
 <p>私有构造器仅被调用一次，用来实例化INSTANCE。由于缺少公有的构造方法，所以外部每次想用Elivs的对象只能用Elvis.INSTANCE这一个对象。<br>我们可以通过输出他们的来简单判断2个对象是否一样，Object的toString方法后面的hashCode是和其在内存中的引用地址有关系的。</p>
 </blockquote>
-<p><img src="http://linxiaobai.github.io/img/blog/2015-01-21 23:42:46的屏幕截图.png" alt="图例1"></p>
+<p><img src="http://linxiaobai.github.io/img/blog/singleton.png" alt="图例1"></p>
 <p>有一点需要注意的是，这种方式是可以通过反射来调用私有构造方法来生成不同的实例化对象，<br>书上提到了这个问题，于是我测试了一下确实是有问题的。</p>
 <pre><code>package com.pattern.singleton;
 
@@ -219,7 +219,7 @@ public class Test {
     }
 }
 </code></pre>
-<p>测试结果:<br><img src="http://linxiaobai.github.io/img/blog/2015-01-22 00:03:41的屏幕截图.png" alt="例子2"></p>
+<p>测试结果:<br><img src="http://linxiaobai.github.io/img/blog/singleton2.png" alt="例子2"></p>
 <p><strong>我们可以看到这序列化前后对象是不一样的</strong></p>
 <blockquote>
 <p>这时候如果我们想解决这个问题就需要用到一个readResolve方法</p>

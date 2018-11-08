@@ -164,12 +164,11 @@
 								
 								
 								
-								说明:内容摘自公司内部confluence,部分是自己写的,部分是同事写的,记录下来供以后参考学习.
-
+								
 解决思路用hset和hget进行每个对象的存取，用zadd和zrange存取条件索引（可以通过控制后面offset值进行分页查询），然后根据zrange获取到的key值再去用hget循环遍历获取对象add到返回的集合当中。
 
 简单实验但是为了实现根据条件查询，需要在存取对象前对某个条件做索引，下面举个例子。
-现在有4个用户，分别是： zhangsan,lisi,wangwu
+现在有4个用户，分别是： zhangsan,lisi,wangwu,zhaoliu。其中zhangsan和wangwu是货主，userType值为0，其余2个是司机，u
 								...
 							</p>
 						</section>
