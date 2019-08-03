@@ -105,6 +105,49 @@
 			<article class="post-card post  no-image ">
 				
 				<div class="post-card-content">
+					<a class="post-card-content-link" href="/2015/04/06/Maven构建多环境发布/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								others
+								| 
+								
+								<time datetime="2015-04-06T03:06:21.000Z" itemprop="datePublished">
+									4月 6 2015
+								</time>
+							</span>
+							<h2 class="post-card-title">Maven构建多环境发布</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								web项目在不同运行环境下如本地测试、线上测试、生产环境多个环境的资源配置文件各不相同，以项目为例，资源文件结构如下图：
+
+
+在maven构建之前，每次部署完成之后都需要手动修改配置文件，这样极为不便，下面介绍通过maven构建多环境下的打包方法。
+1.首先资源文件配置如上图所示，划分不同环境的资源文件目录。2.增加web模块的pom文件配置：
+&lt;profiles&gt;
+    &lt;profile&gt;
+        &lt;id&gt;local&lt;/i
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						
+						<span class="post-card-author">Kevin Lim</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
 					<a class="post-card-content-link" href="/2015/04/06/GeoHash的简单使用例子/">
 						<header class="post-card-header">
 							<span class="post-card-tags">
@@ -385,6 +428,12 @@ import redis.clie
         
         
         <li>
+          <a href="/2019/08/03/netty-CompositeByteBuf源码浅析/">netty源码分析之CompositeByteBuf</a>
+        </li>
+        
+        
+        
+        <li>
           <a href="/2019/01/22/Spring学习笔记之IOC容器/">Spring学习笔记之IOC容器</a>
         </li>
         
@@ -395,10 +444,6 @@ import redis.clie
         </li>
         
         
-        
-        <li>
-          <a href="/2018/07/05/ES分片分配规则/">ES分片分配规则</a>
-        </li>
         
         
         
@@ -479,7 +524,7 @@ import redis.clie
 		<h3 class="read-next-card-header-title">标签云</h3>
 	</header>
 	<div class="read-next-card-content-ext">
-		<a href="/tags/ClassLoader/" style="font-size: 14px;">ClassLoader</a> <a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/annotation/" style="font-size: 14px;">annotation</a> <a href="/tags/curl/" style="font-size: 14px;">curl</a> <a href="/tags/elasticsearch/" style="font-size: 14px;">elasticsearch</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/netty/" style="font-size: 14px;">netty</a> <a href="/tags/oom/" style="font-size: 14px;">oom</a> <a href="/tags/python/" style="font-size: 16.5px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/spi/" style="font-size: 14px;">spi</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
+		<a href="/tags/ByteBuf/" style="font-size: 14px;">ByteBuf</a> <a href="/tags/ClassLoader/" style="font-size: 14px;">ClassLoader</a> <a href="/tags/JVM/" style="font-size: 16.5px;">JVM</a> <a href="/tags/annotation/" style="font-size: 14px;">annotation</a> <a href="/tags/curl/" style="font-size: 14px;">curl</a> <a href="/tags/elasticsearch/" style="font-size: 14px;">elasticsearch</a> <a href="/tags/geohash/" style="font-size: 14px;">geohash</a> <a href="/tags/idea/" style="font-size: 14px;">idea</a> <a href="/tags/java/" style="font-size: 24px;">java</a> <a href="/tags/linux/" style="font-size: 16.5px;">linux</a> <a href="/tags/maven/" style="font-size: 14px;">maven</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/netty/" style="font-size: 16.5px;">netty</a> <a href="/tags/oom/" style="font-size: 14px;">oom</a> <a href="/tags/python/" style="font-size: 16.5px;">python</a> <a href="/tags/redis/" style="font-size: 21.5px;">redis</a> <a href="/tags/scan/" style="font-size: 14px;">scan</a> <a href="/tags/sentinel/" style="font-size: 14px;">sentinel</a> <a href="/tags/spi/" style="font-size: 14px;">spi</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/sublime中文/" style="font-size: 14px;">sublime中文</a> <a href="/tags/ubuntu/" style="font-size: 16.5px;">ubuntu</a> <a href="/tags/分页/" style="font-size: 14px;">分页</a> <a href="/tags/动态规划/" style="font-size: 14px;">动态规划</a> <a href="/tags/回溯/" style="font-size: 14px;">回溯</a> <a href="/tags/在线人数统计/" style="font-size: 14px;">在线人数统计</a> <a href="/tags/排序算法/" style="font-size: 14px;">排序算法</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a> <a href="/tags/数据结构/" style="font-size: 14px;">数据结构</a> <a href="/tags/算法/" style="font-size: 19px;">算法</a> <a href="/tags/设计模式/" style="font-size: 14px;">设计模式</a>
 	</div>
 </article>
 
