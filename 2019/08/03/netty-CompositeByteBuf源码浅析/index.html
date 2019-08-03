@@ -231,7 +231,8 @@ ByteBuf headerByteBuf3 = allByteBuf.slice(0, header.length);
 headerByteBuf3.writeChar(&#39;a&#39;); //Exception in thread &quot;main&quot; java.lang.IndexOutOfBoundsException:
 </code></pre>
 <p>如果slice的拆分的部分包含header的全部以及body的前一部分，在读数据时，会遍历CompositeByteBuf里的components来copy对应的值。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>CompositeByteBuf</code>复用了组合成分中的byte数组，避免了数据的反复拷贝<br><code>SlicedAbstractByteBuf</code>复用了<code>CompositeByteBuf</code>对象(执行slice方法的对象)，无论slice执行多少次，内部使用的数据都是一份<code>CompositeByteBuf</code>，读数据会基于<code>CompositeByteBuf</code>对象中的components数组，然后结合当前<code>SlicedAbstractByteBuf</code>对象的索引值来实现。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>CompositeByteBuf</code>复用了组合成分中的byte数组，避免了数据的反复拷贝</p>
+<p><code>SlicedAbstractByteBuf</code>复用了<code>CompositeByteBuf</code>对象(执行slice方法的对象)，无论slice执行多少次，内部使用的数据都是一份<code>CompositeByteBuf</code>，读数据会基于<code>CompositeByteBuf</code>对象中的components数组，然后结合当前<code>SlicedAbstractByteBuf</code>对象的索引值来实现</p>
 
                 </div>
             </section>
