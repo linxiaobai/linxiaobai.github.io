@@ -133,7 +133,28 @@ public class JedisPool {
         }
         return pool;
     }
-}</code></pre><br>当你觉得某一个对象在整个系统里只需要生成一个就好了，不需要每次都实例化一个新的，就可以用到单例模式了，它在jvm里面是唯一的。</p>
+}</code></pre><br>当你觉得某一个对象在整个系统里只需要生成一个就好了，不需要每次都实例化一个新的，就可以用到单例模式了，它在jvm里面是唯一的。<br>当然上面写的单例模式是非线程安全的，如果多个线程同时调JedisPool.getJedisPool()方法时可能会创建多个JedisPool对象，完善写法如下:<br><pre><code>package utils;
+
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+&#x2F;**
+ * Created by Kevin on 2015&#x2F;1&#x2F;7.
+ *&#x2F;
+public class JedisPool {
+    private volatile static JedisPool pool = null; &#x2F;&#x2F;volatile禁用指令重排序，确保A线程创建的JedisPool在完全初始化后才能给B线程使用
+    private JedisPool() {
+    }
+    public static JedisPool getJedisPool() {
+        if (pool == null) {
+            synchronized (JedisPool.class) { &#x2F;&#x2F;确保JedisPool只创建一个
+                if (pool == null) {
+                    return new JedisPool(new JedisPoolConfig(), &quot;127.0.0.1&quot;);
+                }
+            }
+        }
+        return pool;
+    }
+}</code></pre></p>
 <h2 id="如何实现单例模式"><a href="#如何实现单例模式" class="headerlink" title="如何实现单例模式"></a>如何实现单例模式</h2><h3 id="私有构造器，公有静态成员"><a href="#私有构造器，公有静态成员" class="headerlink" title="私有构造器，公有静态成员"></a>私有构造器，公有静态成员</h3><pre><code>public class Elvis {
     public static final Elvis INSTANCE = new Elvis();
     private Elvis() {}
